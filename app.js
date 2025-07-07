@@ -1,5 +1,5 @@
 // Complete Gunasthan App Data and Functions
-// Just copy all of this into your app.js file
+// Fixed version with modal close issue resolved
 
 // Gunasthan Data
 const gunasthansData = {
@@ -421,7 +421,8 @@ function showCellDetail(gunasthanId, thanaIndex) {
 }
 
 function closeModal(event) {
-  if (!event || event.target.id === 'modal') {
+  // Close modal when clicking on modal background or close button
+  if (!event || event.target.id === 'modal' || event.target.classList.contains('modal-close')) {
     document.getElementById('modal').classList.add('hidden');
   }
 }
@@ -435,6 +436,23 @@ function getProgressColor(percentage) {
 }
 
 // Initialize on load
-window.onload = function() {
+document.addEventListener('DOMContentLoaded', function() {
   loadOverview();
-};
+  
+  // Add click event listener to modal background
+  const modal = document.getElementById('modal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal(e);
+      }
+    });
+  }
+  
+  // Add keyboard event listener for ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeModal();
+    }
+  });
+});
