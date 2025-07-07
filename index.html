@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1e40af">
+    <title>गुणस्थान - 24 ठाणा</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f3f4f6;
+            overflow-x: hidden;
+        }
+        
+        .app-header {
+            background: linear-gradient(to right, #1e40af, #3730a3);
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .app-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .tab-container {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 56px;
+            z-index: 90;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #1e40af;
+            color: white;
+        }
+        
+        .content {
+            padding: 16px;
+            min-height: calc(100vh - 120px);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .gunasthan-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .gunasthan-card:active {
+            transform: scale(0.98);
+        }
+        
+        .gunasthan-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1e40af;
+            color: white;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 12px;
+        }
+        
+        .gunasthan-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .gunasthan-sanskrit {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .matrix-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 8px;
+            margin: -16px;
+            padding: 16px;
+        }
+        
+        .matrix-table {
+            border-collapse: collapse;
+            font-size: 12px;
+            min-width: 800px;
+        }
+        
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        .matrix-table th {
+            background: #f3f4f6;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .matrix-table .thana-header {
+            text-align: left;
+            background: #fafafa;
+            position: sticky;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .progress-bar {
+            width: 40px;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin: 4px auto;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: flex-end;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-height: 80vh;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .close-button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .info-section {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 4px;
+        }
+        
+        .transition-card {
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        
+        @media (max-width: 640px) {
+            .matrix-table {
+                font-size: 10px;
+            }
+            
+            .matrix-table th,
+            .matrix-table td {
+                padding: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <h1 class="app-title">गुणस्थान सोपान - चौबीस ठाणा</h1>
+    </div>
+    
+    <div class="tab-container">
+        <button class="tab active" onclick="showTab('overview')">Overview</button>
+        <button class="tab" onclick="showTab('matrix')">Matrix</button>
+        <button class="tab" onclick="showTab('transitions')">Transitions</button>
+        <button class="tab" onclick="showTab('search')">Search</button>
+    </div>
+    
+    <div class="content">
+        <div id="overview-content" class="tab-content">
+            <div id="gunasthan-list"></div>
+        </div>
+        
+        <div id="matrix-content" class="tab-content hidden">
+            <div class="matrix-container">
+                <div id="matrix-table"></div>
+            </div>
+        </div>
+        
+        <div id="transitions-content" class="tab-content hidden">
+            <div id="transitions-list"></div>
+        </div>
+        
+        <div id="search-content" class="tab-content hidden">
+            <input type="text" class="search-box" placeholder="Search Thanas..." oninput="searchThanas(this.value)">
+            <div id="search-results"></div>
+        </div>
+    </div>
+    
+    <div id="modal" class="modal hidden" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modal-title"></h3>
+                <button class="close-button" onclick="closeModal()">×</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
