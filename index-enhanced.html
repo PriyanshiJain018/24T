@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1e40af">
+    <title>गुणस्थान - 24 ठाणा | Complete Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f3f4f6;
+            overflow-x: hidden;
+            color: #1f2937;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        
+        .app-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .app-subtitle {
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        
+        .tab-container {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 68px;
+            z-index: 90;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 14px 8px;
+            text-align: center;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            color: #6b7280;
+        }
+        
+        .tab:hover {
+            background: #f9fafb;
+        }
+        
+        .tab.active {
+            color: #1e40af;
+            background: white;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #1e40af, #7c3aed);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .content {
+            padding: 16px;
+            min-height: calc(100vh - 140px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .gunasthan-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .gunasthan-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: #e0e7ff;
+        }
+        
+        .gunasthan-card:active {
+            transform: scale(0.98);
+        }
+        
+        .gunasthan-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .gunasthan-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .gunasthan-sanskrit {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .gunasthan-description {
+            font-size: 13px;
+            color: #4b5563;
+            line-height: 1.5;
+            margin-top: 8px;
+        }
+        
+        /* Matrix Styles */
+        .matrix-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            margin: -8px;
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .matrix-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 12px;
+            min-width: 900px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .matrix-table th,
+        .matrix-table td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 6px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .matrix-table th {
+            background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            color: #374151;
+        }
+        
+        .matrix-table .thana-header {
+            text-align: left;
+            background: #fafafa;
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            min-width: 120px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .matrix-table tbody tr:hover {
+            background: #f9fafb;
+        }
+        
+        .matrix-table td {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .matrix-table td:hover {
+            background: #eff6ff;
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+        
+        .cell-fraction {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 11px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin: 4px auto 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        /* Enhanced Modal/Tooltip */
+        .tooltip-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: flex-end;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .tooltip-content {
+            background: white;
+            width: 100%;
+            max-height: 85vh;
+            border-radius: 24px 24px 0 0;
+            padding: 8px 20px 20px;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .tooltip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-top: 12px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .tooltip-title-section {
+            flex: 1;
+        }
+        
+        .tooltip-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .tooltip-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .tooltip-gunasthan-info {
+            font-size: 13px;
+            color: #3b82f6;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .close-button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-button:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .tooltip-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e40af;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        
+        .tooltip-section {
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .tooltip-section.present {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+        
+        .tooltip-section.absent {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title.present {
+            color: #16a34a;
+        }
+        
+        .section-title.absent {
+            color: #dc2626;
+        }
+        
+        .section-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .section-icon.present {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .section-icon.absent {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .section-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        
+        .item-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+        
+        .tooltip-notes {
+            margin-top: 16px;
+            padding: 12px;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #78350f;
+            font-style: italic;
+            line-height: 1.5;
+        }
+        
+        .progress-info {
+            margin-top: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .progress-percentage {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar-large {
+            width: 100%;
+            height: 12px;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .progress-fill-large {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #3b82f6, #7c3aed);
+        }
+        
+        /* Search Box */
+        .search-box {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 16px;
+            margin-bottom: 16px;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Transitions */
+        .transition-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            border: 1px solid #c7d2fe;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .transition-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .transition-arrow {
+            font-size: 24px;
+            color: #3b82f6;
+        }
+        
+        .transition-targets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .transition-target {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e0e7ff;
+        }
+        
+        .transition-target:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 640px) {
+            .app-title {
+                font-size: 18px;
+            }
+            
+            .tab {
+                font-size: 12px;
+                padding: 12px 4px;
+            }
+            
+            .matrix-table {
+                font-size: 10px;
+            }
+            
+            .matrix-table th,
+            .matrix-table td {
+                padding: 6px 3px;
+            }
+            
+            .matrix-table .thana-header {
+                min-width: 80px;
+                font-size: 11px;
+            }
+            
+            .gunasthan-card {
+                padding: 16px;
+            }
+            
+            .gunasthan-number {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+            
+            .gunasthan-name {
+                font-size: 16px;
+            }
+            
+            .tooltip-content {
+                max-height: 90vh;
+            }
+        }
+        
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-4 {
+            margin-top: 16px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #86efac;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .info-title {
+            font-weight: 600;
+            color: #16a34a;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .info-description {
+            color: #14532d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <h1 class="app-title">गुणस्थान सोपान - चौबीस ठाणा</h1>
+        <div class="app-subtitle">Complete Spiritual Journey Mapping</div>
+    </div>
+    
+    <div class="tab-container">
+        <button class="tab active" onclick="showTab('overview')">Overview</button>
+        <button class="tab" onclick="showTab('matrix')">Matrix</button>
+        <button class="tab" onclick="showTab('transitions')">Transitions</button>
+        <button class="tab" onclick="showTab('search')">Search</button>
+    </div>
+    
+    <div class="content">
+        <div id="overview-content" class="tab-content">
+            <div class="info-section">
+                <div class="info-title">14 Spiritual Stages (गुणस्थान)</div>
+                <div class="info-description">
+                    Journey from complete delusion to liberation through 14 progressive stages of spiritual development.
+                    Each stage represents a distinct state of consciousness and karmic bondage.
+                </div>
+            </div>
+            <div id="gunasthan-list"></div>
+        </div>
+        
+        <div id="matrix-content" class="tab-content hidden">
+            <div class="info-section">
+                <div class="info-title">24 Thana Matrix</div>
+                <div class="info-description">
+                    Comprehensive mapping of 24 spiritual attributes across all 14 Gunasthanas. 
+                    Click any cell to see detailed breakdown of present and absent characteristics.
+                </div>
+            </div>
+            <div class="matrix-container">
+                <div id="matrix-table"></div>
+            </div>
+        </div>
+        
+        <div id="transitions-content" class="tab-content hidden">
+            <div class="info-section">
+                <div class="info-title">Spiritual Progression Paths</div>
+                <div class="info-description">
+                    Explore possible transitions between Gunasthanas. Each stage has specific paths forward or backward
+                    based on spiritual progress and karmic conditions.
+                </div>
+            </div>
+            <div id="transitions-list"></div>
+        </div>
+        
+        <div id="search-content" class="tab-content hidden">
+            <input type="text" class="search-box" placeholder="Search Thanas (Hindi/English)..." oninput="searchThanas(this.value)">
+            <div id="search-results">
+                <div class="loading">Enter a search term to find Thanas...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="tooltip-modal" class="tooltip-modal hidden" onclick="closeTooltip(event)">
+        <div class="tooltip-content" onclick="event.stopPropagation()">
+            <div class="tooltip-header">
+                <div class="tooltip-title-section">
+                    <h3 id="tooltip-title" class="tooltip-title"></h3>
+                    <div id="tooltip-subtitle" class="tooltip-subtitle"></div>
+                    <div id="tooltip-gunasthan" class="tooltip-gunasthan-info"></div>
+                </div>
+                <button class="close-button" onclick="closeTooltip()">×</button>
+            </div>
+            
+            <div class="tooltip-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-present">0</span>
+                    <span class="stat-label">Present</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-absent">0</span>
+                    <span class="stat-label">Absent</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-total">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+            </div>
+            
+            <div id="tooltip-body"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Complete Gunasthan Data
+        const gunasthansData = {
+            1: {
+                nameHi: "मिथ्यात्व",
+                nameEn: "Mithyatva", 
+                english: "False Belief",
+                description: "The soul possesses wrong belief and is bound by all karmas. Complete spiritual darkness.",
+                color: "#EF4444"
+            },
+            2: {
+                nameHi: "सासादन",
+                nameEn: "Sasadan",
+                english: "Downfall", 
+                description: "Temporary stage when a soul falls from right belief back to wrong belief.",
+                color: "#F87171"
+            },
+            3: {
+                nameHi: "मिश्र",
+                nameEn: "Mishra",
+                english: "Mixed Belief",
+                description: "The soul has mixed right and wrong beliefs simultaneously.",
+                color: "#FB923C"
+            },
+            4: {
+                nameHi: "अविरत सम्यग्दृष्टि",
+                nameEn: "Avirat Samyagdrishti",
+                english: "Right Belief without Conduct",
+                description: "Soul has right belief but has not yet adopted right conduct.",
+                color: "#FBBF24"
+            },
+            5: {
+                nameHi: "देशविरत",
+                nameEn: "Deshvirat",
+                english: "Partial Vows",
+                description: "Soul adopts partial vows and begins practicing limited self-restraint.",
+                color: "#A3E635"
+            },
+            6: {
+                nameHi: "प्रमत्तविरत",
+                nameEn: "Pramattavirat",
+                english: "Careless Conduct",
+                description: "Soul has taken complete vows but is still careless in observance.",
+                color: "#4ADE80"
+            },
+            7: {
+                nameHi: "अप्रमत्तविरत",
+                nameEn: "Apramattavirat",
+                english: "Careful Conduct",
+                description: "Soul observes vows with complete care and attention.",
+                color: "#10B981"
+            },
+            8: {
+                nameHi: "अपूर्वकरण",
+                nameEn: "Apurvakarana",
+                english: "Unprecedented Thought-activity",
+                description: "Soul experiences unprecedented spiritual transformation.",
+                color: "#14B8A6"
+            },
+            9: {
+                nameHi: "अनिवृत्तिकरण",
+                nameEn: "Anivrittikarana",
+                english: "Subtle Passion",
+                description: "Only subtle forms of passion remain; gross passions eliminated.",
+                color: "#06B6D4"
+            },
+            10: {
+                nameHi: "सूक्ष्मसांपराय",
+                nameEn: "Sukshmasamparaya",
+                english: "Subtle Greed",
+                description: "Only the most subtle form of greed (lobha) remains.",
+                color: "#3B82F6"
+            },
+            11: {
+                nameHi: "उपशांत मोह",
+                nameEn: "Upashanta Moha",
+                english: "Subsided Delusion",
+                description: "All deluding karmas are temporarily subsided but not destroyed.",
+                color: "#6366F1"
+            },
+            12: {
+                nameHi: "क्षीणमोह",
+                nameEn: "Kshina Moha",
+                english: "Destroyed Delusion",
+                description: "All deluding karmas are permanently destroyed. No return to lower stages.",
+                color: "#8B5CF6"
+            },
+            13: {
+                nameHi: "सयोगकेवली",
+                nameEn: "Sayogakevali",
+                english: "Omniscient with Activity",
+                description: "Soul achieves omniscience but still has bodily activities.",
+                color: "#EC4899"
+            },
+            14: {
+                nameHi: "अयोगकेवली",
+                nameEn: "Ayogakevali",
+                english: "Omniscient without Activity",
+                description: "Final stage before liberation. No mental, verbal, or physical activities.",
+                color: "#F59E0B"
+            }
+        };
+
+        // 24 Thanas Data with complete subtypes
+        const thanasData = [
+            { nameHi: "गति", nameEn: "Gati", english: "State of Existence", total: 4, icon: "🌍",
+              subtypes: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"] },
+            { nameHi: "इन्द्रिय", nameEn: "Indriya", english: "Senses", total: 5, icon: "👁️",
+              subtypes: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय", "पंचेन्द्रिय"] },
+            { nameHi: "काय", nameEn: "Kaya", english: "Body", total: 6, icon: "🧘",
+              subtypes: ["पृथ्वीकायिक", "जलकायिक", "अग्निकायिक", "वायुकायिक", "वनस्पतिकायिक", "त्रसकायिक"] },
+            { nameHi: "योग", nameEn: "Yoga", english: "Activity", total: 15, icon: "⚡",
+              subtypes: ["सत्य मनोयोग", "असत्य मनोयोग", "उभय मनोयोग", "अनुभय मनोयोग", "सत्य वचनयोग", 
+                         "असत्य वचनयोग", "उभय वचनयोग", "अनुभय वचनयोग", "कार्माण काययोग", 
+                         "औदारिक मिश्र योग", "औदारिक काययोग", "वैक्रियिक मिश्र योग", 
+                         "वैक्रियिक काययोग", "आहारक मिश्र योग", "आहारक काययोग"] },
+            { nameHi: "वेद", nameEn: "Veda", english: "Gender-inclination", total: 3, icon: "⚥",
+              subtypes: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"] },
+            { nameHi: "कषाय", nameEn: "Kashaya", english: "Passions", total: 25, icon: "🔥",
+              subtypes: ["अनन्तानुबंधी क्रोध", "अनन्तानुबंधी मान", "अनन्तानुबंधी माया", "अनन्तानुबंधी लोभ",
+                         "अप्रत्याख्यानावरण क्रोध", "अप्रत्याख्यानावरण मान", "अप्रत्याख्यानावरण माया", "अप्रत्याख्यानावरण लोभ",
+                         "प्रत्याख्यानावरण क्रोध", "प्रत्याख्यानावरण मान", "प्रत्याख्यानावरण माया", "प्रत्याख्यानावरण लोभ",
+                         "संज्वलन क्रोध", "संज्वलन मान", "संज्वलन माया", "संज्वलन लोभ",
+                         "हास्य", "रति", "अरति", "शोक", "भय", "जुगुप्सा", "स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"] },
+            { nameHi: "ज्ञान", nameEn: "Gyan", english: "Knowledge", total: 8, icon: "🧠",
+              subtypes: ["कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान", "मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान"] },
+            { nameHi: "संयम", nameEn: "Samyam", english: "Self-restraint", total: 7, icon: "🛡️",
+              subtypes: ["असंयम", "संयमासंयम", "सामायिक", "छेदोपस्थापना", "परिहार विशुद्धि", "सूक्ष्मसांपराय", "यथाख्यात"] },
+            { nameHi: "दर्शन", nameEn: "Darshan", english: "Perception", total: 4, icon: "👀",
+              subtypes: ["चक्षुदर्शन", "अचक्षुदर्शन", "अवधिदर्शन", "केवलदर्शन"] },
+            { nameHi: "लेश्या", nameEn: "Leshya", english: "Aura", total: 6, icon: "🌈",
+              subtypes: ["कृष्ण लेश्या", "नील लेश्या", "कापोत लेश्या", "पीत लेश्या", "पद्म लेश्या", "शुक्ल लेश्या"] },
+            { nameHi: "भव्य", nameEn: "Bhavya", english: "Capability", total: 2, icon: "✨",
+              subtypes: ["भव्य", "अभव्य"] },
+            { nameHi: "सम्यक्त्व", nameEn: "Samyaktva", english: "Right Belief", total: 6, icon: "💎",
+              subtypes: ["मिथ्यात्व", "सासादन", "मिश्र", "क्षयोपशम", "उपशम", "क्षायिक"] },
+            { nameHi: "संज्ञी", nameEn: "Sangyi", english: "Consciousness", total: 2, icon: "🧩",
+              subtypes: ["संज्ञी", "असंज्ञी"] },
+            { nameHi: "आहारक", nameEn: "Aaharaka", english: "Assimilator", total: 2, icon: "🍃",
+              subtypes: ["आहारक", "अनाहारक"] },
+            { nameHi: "गुणस्थान", nameEn: "Gunasthan", english: "Spiritual Stages", total: 14, icon: "📶",
+              subtypes: ["मिथ्यात्व", "सासादन", "मिश्र", "अविरत", "देशविरत", "प्रमत्त", "अप्रमत्त", 
+                         "अपूर्वकरण", "अनिवृत्ति", "सूक्ष्म", "उपशांत", "क्षीण", "सयोग", "अयोग"] },
+            { nameHi: "जीवसमास", nameEn: "Jivasamas", english: "Life Classes", total: 19, icon: "🌱",
+              subtypes: ["पृथ्वीकायिक सूक्ष्म", "पृथ्वीकायिक बादर", "जलकायिक सूक्ष्म", "जलकायिक बादर",
+                         "अग्निकायिक सूक्ष्म", "अग्निकायिक बादर", "वायुकायिक सूक्ष्म", "वायुकायिक बादर",
+                         "नित्य निगोद सूक्ष्म", "नित्य निगोद बादर", "इतर निगोद सूक्ष्म", "इतर निगोद बादर",
+                         "सप्रतिष्ठित प्रत्येक वनस्पति", "अप्रतिष्ठित प्रत्येक वनस्पति", "द्वीन्द्रिय जीव बादर",
+                         "त्रीन्द्रिय जीव बादर", "चतुरिन्द्रिय जीव बादर", "असंज्ञी पंचेन्द्रिय जीव बादर", 
+                         "संज्ञी पंचेन्द्रिय जीव बादर"] },
+            { nameHi: "पर्याप्ति", nameEn: "Paryapti", english: "Developmental Stages", total: 6, icon: "🌿",
+              subtypes: ["आहार", "शरीर", "इन्द्रिय", "श्वासोच्छ्वास", "भाषा", "मन"] },
+            { nameHi: "प्राण", nameEn: "Pran", english: "Vitalities", total: 10, icon: "💨",
+              subtypes: ["स्पर्शन", "रसना", "घ्राण", "चक्षु", "श्रोत्र", "मनोबल", "वचनबल", "कायबल", "श्वासोच्छ्वास", "आयु"] },
+            { nameHi: "संज्ञा", nameEn: "Sangya", english: "Instincts", total: 4, icon: "🎯",
+              subtypes: ["आहार", "भय", "मैथुन", "परिग्रह"] },
+            { nameHi: "उपयोग", nameEn: "Upayog", english: "Conscious Manifestation", total: 12, icon: "🔮",
+              subtypes: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान",
+                         "कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान", "चक्षुदर्शन", "अचक्षुदर्शन", 
+                         "अवधिदर्शन", "केवलदर्शन"] },
+            { nameHi: "ध्यान", nameEn: "Dhyana", english: "Meditation", total: 16, icon: "🧘‍♀️",
+              subtypes: ["इष्टवियोगज", "अनिष्टसंयोगज", "पीड़ाचिंतन", "निदान", "हिंसानंद", "मृषानंद", 
+                         "चौर्यानंद", "परिग्रहानंद", "आज्ञाविचय", "अपायविचय", "विपाकविचय", "संस्थानविचय",
+                         "पृथक्त्वविर्तक", "एकत्वविर्तक", "सूक्ष्मक्रिया", "व्युपरतक्रिया"] },
+            { nameHi: "आस्रव", nameEn: "Ashrav", english: "Influx of Karma", total: 57, icon: "⬇️",
+              subtypes: ["मिथ्यात्व (5)", "योग (15)", "अविरति (12)", "कषाय (25)"] },
+            { nameHi: "जाति", nameEn: "Jati", english: "Species", total: 84, icon: "🦋",
+              subtypes: ["84 लाख योनियाँ"] },
+            { nameHi: "कुल", nameEn: "Kula", english: "Family", total: 199.5, icon: "👥",
+              subtypes: ["199.5 लाख करोड़ उप-श्रेणियाँ"] }
+        ];
+
+        // Complete matrix data with detailed mappings
+        const completeMatrixData = {
+            1: { // Mithyatva
+                0: { present: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"], absent: [], count: 4, total: 4,
+                     notes: "All four states of existence are possible in false belief stage" },
+                1: { present: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय", "पंचेन्द्रिय"], absent: [], count: 5, total: 5,
+                     notes: "All five sense categories exist - from one-sensed to five-sensed beings" },
+                2: { present: ["पृथ्वीकायिक", "जलकायिक", "अग्निकायिक", "वायुकायिक", "वनस्पतिकायिक", "त्रसकायिक"], absent: [], count: 6, total: 6,
+                     notes: "All six body types are present including all elements and mobile beings" },
+                3: { present: ["सत्य मनोयोग", "असत्य मनोयोग", "उभय मनोयोग", "अनुभय मनोयोग", "सत्य वचनयोग", "असत्य वचनयोग", 
+                               "उभय वचनयोग", "अनुभय वचनयोग", "कार्माण काययोग", "औदारिक मिश्र योग", "औदारिक काययोग", 
+                               "वैक्रियिक मिश्र योग", "वैक्रियिक काययोग"], 
+                     absent: ["आहारक मिश्र योग", "आहारक काययोग"], count: 13, total: 15,
+                     notes: "All activities except Aharaka-related yogas (which require 6th Gunasthan)" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "All three gender inclinations are present" },
+                5: { present: thanasData[5].subtypes, absent: [], count: 25, total: 25,
+                     notes: "All 25 passions including 4 types of anger, pride, deceit, greed plus 9 quasi-passions" },
+                6: { present: ["कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान"], 
+                     absent: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान"], count: 3, total: 8,
+                     notes: "Only wrong knowledge types - no right knowledge in false belief" },
+                7: { present: ["असंयम"], absent: ["संयमासंयम", "सामायिक", "छेदोपस्थापना", "परिहार विशुद्धि", "सूक्ष्मसांपराय", "यथाख्यात"], 
+                     count: 1, total: 7, notes: "Complete absence of self-restraint" },
+                8: { present: ["चक्षुदर्शन", "अचक्षुदर्शन"], absent: ["अवधिदर्शन", "केवलदर्शन"], count: 2, total: 4,
+                     notes: "Only sensory perceptions - no clairvoyant or omniscient perception" },
+                9: { present: ["कृष्ण लेश्या", "नील लेश्या", "कापोत लेश्या", "पीत लेश्या", "पद्म लेश्या", "शुक्ल लेश्या"], 
+                     absent: [], count: 6, total: 6, notes: "All six psychic colorations from black to white are possible" },
+                10: { present: ["भव्य", "अभव्य"], absent: [], count: 2, total: 2,
+                      notes: "Both capable and incapable of liberation exist in false belief" },
+                11: { present: ["मिथ्यात्व"], absent: ["सासादन", "मिश्र", "क्षयोपशम", "उपशम", "क्षायिक"], count: 1, total: 6,
+                      notes: "Only wrong belief exists - this defines the Mithyatva stage" },
+                12: { present: ["संज्ञी", "असंज्ञी"], absent: [], count: 2, total: 2,
+                      notes: "Both rational and non-rational beings exist" },
+                13: { present: ["आहारक", "अनाहारक"], absent: [], count: 2, total: 2,
+                      notes: "Both food-intake and non-food-intake states are present" },
+                14: { present: ["मिथ्यात्व"], absent: ["सासादन", "मिश्र", "अविरत", "देशविरत", "प्रमत्त", "अप्रमत्त", 
+                                                        "अपूर्वकरण", "अनिवृत्ति", "सूक्ष्म", "उपशांत", "क्षीण", "सयोग", "अयोग"], 
+                      count: 1, total: 14, notes: "Only in first Gunasthan - Mithyatva" },
+                15: { present: thanasData[15].subtypes, absent: [], count: 19, total: 19,
+                      notes: "All 19 life forms exist in false belief" },
+                16: { present: ["आहार", "शरीर", "इन्द्रिय", "श्वासोच्छ्वास", "भाषा", "मन"], absent: [], count: 6, total: 6,
+                      notes: "All six bio-potentials are present" },
+                17: { present: thanasData[17].subtypes, absent: [], count: 10, total: 10,
+                      notes: "All 10 life forces are present" },
+                18: { present: ["आहार", "भय", "मैथुन", "परिग्रह"], absent: [], count: 4, total: 4,
+                      notes: "All four instincts are active" },
+                19: { present: ["कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान", "चक्षुदर्शन", "अचक्षुदर्शन"], 
+                      absent: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान", "अवधिदर्शन", "केवलदर्शन"], 
+                      count: 5, total: 12, notes: "Only wrong knowledge and basic perception applications" },
+                20: { present: ["इष्टवियोगज", "अनिष्टसंयोगज", "पीड़ाचिंतन", "निदान", "हिंसानंद", "मृषानंद", "चौर्यानंद", "परिग्रहानंद"], 
+                      absent: ["आज्ञाविचय", "अपायविचय", "विपाकविचय", "संस्थानविचय", "पृथक्त्वविर्तक", "एकत्वविर्तक", "सूक्ष्मक्रिया", "व्युपरतक्रिया"], 
+                      count: 8, total: 16, notes: "Only painful and cruel meditations - no righteous or pure meditation" },
+                21: { present: ["मिथ्यात्व (5)", "योग (13)", "अविरति (12)", "कषाय (25)"], absent: ["आहारक योग (2)"], 
+                      count: 55, total: 57, notes: "All influx channels except Aharaka-related activities" },
+                22: { present: ["All 84 लाख birth categories"], absent: [], count: 84, total: 84,
+                      notes: "All 84 lakh birth categories are possible" },
+                23: { present: ["All 199.5 लाख करोड़ sub-categories"], absent: [], count: 199.5, total: 199.5,
+                      notes: "All sub-categories of births are possible" }
+            },
+            2: { // Sasadan
+                0: { present: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"], absent: [], count: 4, total: 4,
+                     notes: "All four destinies possible during downfall from right belief" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय"], count: 1, total: 5,
+                     notes: "Only five-sensed beings can experience Sasadan downfall" },
+                2: { present: ["त्रसकायिक"], absent: ["पृथ्वीकायिक", "जलकायिक", "अग्निकायिक", "वायुकायिक", "वनस्पतिकायिक"], 
+                     count: 1, total: 6, notes: "Only mobile beings (tras) experience this downfall stage" },
+                3: { present: ["सत्य मनोयोग", "असत्य मनोयोग", "उभय मनोयोग", "अनुभय मनोयोग", "सत्य वचनयोग", "असत्य वचनयोग", 
+                               "उभय वचनयोग", "अनुभय वचनयोग", "कार्माण काययोग", "औदारिक मिश्र योग", "औदारिक काययोग", 
+                               "वैक्रियिक मिश्र योग", "वैक्रियिक काययोग"], 
+                     absent: ["आहारक मिश्र योग", "आहारक काययोग"], count: 13, total: 15,
+                     notes: "All activities except Aharaka yogas during downfall" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "All three gender inclinations present during downfall" },
+                5: { present: thanasData[5].subtypes, absent: [], count: 25, total: 25,
+                     notes: "All passions are active during spiritual downfall" },
+                6: { present: ["कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान"], 
+                     absent: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान"], count: 3, total: 8,
+                     notes: "Only wrong knowledge during downfall from right belief" },
+                7: { present: ["असंयम"], absent: ["All other forms"], count: 1, total: 7,
+                     notes: "Complete non-restraint during downfall" },
+                8: { present: ["चक्षुदर्शन", "अचक्षुदर्शन"], absent: ["अवधिदर्शन", "केवलदर्शन"], count: 2, total: 4,
+                     notes: "Only sensory perceptions during downfall" },
+                9: { present: ["कृष्ण", "नील", "कापोत", "पीत", "पद्म", "शुक्ल"], absent: [], count: 6, total: 6,
+                     notes: "All six psychic colors possible during downfall" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only those capable of liberation can fall from right belief" },
+                11: { present: ["सासादन"], absent: ["मिथ्यात्व", "मिश्र", "क्षयोपशम", "उपशम", "क्षायिक"], count: 1, total: 6,
+                      notes: "Downfall state between right and wrong belief" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational beings experience Sasadan" },
+                13: { present: ["आहारक", "अनाहारक"], absent: [], count: 2, total: 2,
+                      notes: "Both states possible during downfall" },
+                14: { present: ["सासादन"], absent: ["All other 13"], count: 1, total: 14,
+                      notes: "Only in second Gunasthan - Sasadan" },
+                15: { present: ["संज्ञी पंचेन्द्रिय जीव बादर"], absent: ["All other 18"], count: 1, total: 19,
+                      notes: "Only rational five-sensed beings" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials present" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces present" },
+                18: { present: ["All 4"], absent: [], count: 4, total: 4,
+                      notes: "All instincts active during downfall" },
+                19: { present: ["कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान", "चक्षुदर्शन", "अचक्षुदर्शन"], 
+                      absent: ["Right knowledge"], count: 5, total: 12,
+                      notes: "Wrong knowledge applications during downfall" },
+                20: { present: ["आर्त ध्यान (4)", "रौद्र ध्यान (4)"], absent: ["धर्म ध्यान", "शुक्ल ध्यान"], count: 8, total: 16,
+                      notes: "Only painful and cruel meditations" },
+                21: { present: ["योग (13)", "अविरति (12)", "कषाय (25)"], absent: ["मिथ्यात्व", "आहारक योग"], count: 50, total: 57,
+                      notes: "Influx without false belief (temporarily)" },
+                22: { present: ["26 लाख"], absent: ["58 लाख"], count: 26, total: 84,
+                      notes: "Only five-sensed being categories" },
+                23: { present: ["108.5 लाख करोड़"], absent: ["91 लाख करोड़"], count: 108.5, total: 199.5,
+                      notes: "Sub-categories of five-sensed beings only" }
+            },
+            3: { // Mishra
+                0: { present: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"], absent: [], count: 4, total: 4,
+                     notes: "All four destinies possible in mixed belief" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय"], count: 1, total: 5,
+                     notes: "Only five-sensed beings have mixed belief" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर काय"], count: 1, total: 6,
+                     notes: "Only mobile beings in mixed belief" },
+                3: { present: ["मन योग (4)", "वचन योग (4)", "औदारिक काययोग", "वैक्रियिक काययोग"], 
+                     absent: ["कार्माण", "आहारक related", "मिश्र योग"], count: 10, total: 15,
+                     notes: "Limited yogas - no death/birth related activities" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "All three gender inclinations present" },
+                5: { present: ["All except अनन्तानुबंधी (4)"], absent: ["अनन्तानुबंधी क्रोध", "मान", "माया", "लोभ"], 
+                     count: 21, total: 25, notes: "Anantanubandhi passions absent in mixed belief" },
+                6: { present: ["मिश्र ज्ञान"], absent: ["Pure forms", "Higher knowledge"], count: 2, total: 8,
+                     notes: "Mixed knowledge - combination of right and wrong" },
+                7: { present: ["असंयम"], absent: ["All forms of restraint"], count: 1, total: 7,
+                     notes: "No restraint in mixed belief stage" },
+                8: { present: ["चक्षुदर्शन", "अचक्षुदर्शन"], absent: ["अवधिदर्शन", "केवलदर्शन"], count: 2, total: 4,
+                     notes: "Only sensory perceptions" },
+                9: { present: ["All 6"], absent: [], count: 6, total: 6,
+                     notes: "All psychic colors possible" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only capable of liberation have mixed belief" },
+                11: { present: ["मिश्र"], absent: ["All other 5"], count: 1, total: 6,
+                      notes: "Mixed right-wrong belief state" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational beings" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["मिश्र"], absent: ["All other 13"], count: 1, total: 14,
+                      notes: "Only third Gunasthan" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All other 18"], count: 1, total: 19,
+                      notes: "Only rational five-sensed beings" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials present" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces present" },
+                18: { present: ["All 4"], absent: [], count: 4, total: 4,
+                      notes: "All instincts still active" },
+                19: { present: ["मिश्र ज्ञान उपयोग (3)", "दर्शन उपयोग (2)"], absent: ["Pure knowledge applications"], 
+                      count: 5, total: 12, notes: "Mixed knowledge applications" },
+                20: { present: ["आर्त (4)", "रौद्र (4)", "धर्म (1)"], absent: ["Higher ध्यान"], count: 9, total: 16,
+                      notes: "Limited righteous meditation begins" },
+                21: { present: ["योग (10)", "अविरति (12)", "कषाय (21)"], absent: ["मिथ्यात्व", "अनन्तानुबंधी", "Some योग"], 
+                      count: 43, total: 57, notes: "Reduced influx due to partial right belief" },
+                22: { present: ["26 लाख"], absent: ["58 लाख"], count: 26, total: 84,
+                      notes: "Five-sensed being categories only" },
+                23: { present: ["108.5 लाख करोड़"], absent: ["91 लाख करोड़"], count: 108.5, total: 199.5,
+                      notes: "Five-sensed sub-categories only" }
+            },
+            4: { // Avirat Samyagdrishti
+                0: { present: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"], absent: [], count: 4, total: 4,
+                     notes: "All destinies possible with right belief" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय"], count: 1, total: 5,
+                     notes: "Only five-sensed beings have right belief" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["All 13 except आहारक"], absent: ["आहारक मिश्र", "आहारक काय"], count: 13, total: 15,
+                     notes: "All activities except translocation body" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "All gender inclinations present" },
+                5: { present: ["All except अनन्तानुबंधी (4)"], absent: ["अनन्तानुबंधी passions"], count: 21, total: 25,
+                     notes: "Endless-binding passions destroyed" },
+                6: { present: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान"], absent: ["कुज्ञान (3)", "मनःपर्यय", "केवल"], 
+                     count: 3, total: 8, notes: "Right sensory, scriptural and clairvoyant knowledge" },
+                7: { present: ["असंयम"], absent: ["All forms of restraint"], count: 1, total: 7,
+                     notes: "No vows despite right belief" },
+                8: { present: ["चक्षुदर्शन", "अचक्षुदर्शन", "अवधिदर्शन"], absent: ["केवलदर्शन"], count: 3, total: 4,
+                     notes: "Clairvoyant perception becomes possible" },
+                9: { present: ["All 6"], absent: [], count: 6, total: 6,
+                     notes: "All psychic colors still possible" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only capable of liberation" },
+                11: { present: ["क्षयोपशम", "उपशम", "क्षायिक"], absent: ["मिथ्यात्व", "सासादन", "मिश्र"], count: 3, total: 6,
+                      notes: "Three types of right belief" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational beings" },
+                13: { present: ["आहारक", "अनाहारक"], absent: [], count: 2, total: 2,
+                      notes: "Both states possible" },
+                14: { present: ["अविरत"], absent: ["All other 13"], count: 1, total: 14,
+                      notes: "Fourth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All other 18"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["All 4"], absent: [], count: 4, total: 4,
+                      notes: "All instincts active" },
+                19: { present: ["ज्ञान उपयोग (3)", "दर्शन उपयोग (3)"], absent: ["कुज्ञान", "Higher knowledge"], 
+                      count: 6, total: 12, notes: "Right knowledge applications" },
+                20: { present: ["आर्त (4)", "रौद्र (4)", "धर्म (2)"], absent: ["Higher meditations"], count: 10, total: 16,
+                      notes: "Some righteous meditation begins" },
+                21: { present: ["योग (13)", "अविरति (12)", "कषाय (21)"], absent: ["मिथ्यात्व", "अनन्तानुबंधी", "आहारक"], 
+                      count: 46, total: 57, notes: "Influx without false belief" },
+                22: { present: ["26 लाख"], absent: ["58 लाख"], count: 26, total: 84,
+                      notes: "Five-sensed categories" },
+                23: { present: ["108.5 लाख करोड़"], absent: ["91 लाख करोड़"], count: 108.5, total: 199.5,
+                      notes: "Five-sensed sub-categories" }
+            },
+            5: { // Deshvirat
+                0: { present: ["तिर्यंचगति", "मनुष्यगति"], absent: ["नरकगति", "देवगति"], count: 2, total: 4,
+                     notes: "Only animal and human - no hell or celestial" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक काय"], absent: ["कार्माण", "वैक्रियिक", "आहारक", "मिश्र"], 
+                     count: 9, total: 15, notes: "Limited to gross body activities" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "All gender inclinations" },
+                5: { present: ["अप्रत्याख्यान (4)", "प्रत्याख्यान (4)", "संज्वलन (4)", "नो-कषाय (5)"], 
+                     absent: ["अनन्तानुबंधी (4)"], count: 17, total: 25,
+                     notes: "Partial vow preventing passions remain" },
+                6: { present: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान"], absent: ["Wrong knowledge", "Higher knowledge"], 
+                     count: 3, total: 8, notes: "Three right knowledge types" },
+                7: { present: ["संयमासंयम"], absent: ["असंयम", "Complete restraint"], count: 1, total: 7,
+                     notes: "Partial restraint with partial vows" },
+                8: { present: ["चक्षुदर्शन", "अचक्षुदर्शन", "अवधिदर्शन"], absent: ["केवलदर्शन"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["पीत", "पद्म", "शुक्ल"], absent: ["कृष्ण", "नील", "कापोत"], count: 3, total: 6,
+                     notes: "Only auspicious psychic colors" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only capable of liberation" },
+                11: { present: ["क्षयोपशम", "उपशम", "क्षायिक"], absent: ["Wrong belief types"], count: 3, total: 6,
+                      notes: "Three types of right belief" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake required" },
+                14: { present: ["देशविरत"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Fifth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["All 4"], absent: [], count: 4, total: 4,
+                      notes: "All instincts still active" },
+                19: { present: ["ज्ञान (3)", "दर्शन (3)"], absent: ["Wrong knowledge", "Higher knowledge"], 
+                      count: 6, total: 12, notes: "Right knowledge applications" },
+                20: { present: ["आर्त (4)", "रौद्र (4)", "धर्म (3)"], absent: ["शुक्ल ध्यान"], count: 11, total: 16,
+                      notes: "More righteous meditation" },
+                21: { present: ["योग (9)", "अविरति (11)", "कषाय (17)"], absent: ["Many yogas", "Some passions"], 
+                      count: 37, total: 57, notes: "Reduced influx with partial vows" },
+                22: { present: ["तिर्यंच (4)", "मनुष्य (14)"], absent: ["नरक", "देव", "Others"], count: 18, total: 84,
+                      notes: "Animal and human categories" },
+                23: { present: ["तिर्यंच (43.5)", "मनुष्य (14)"], absent: ["Others"], count: 57.5, total: 199.5,
+                      notes: "Limited sub-categories" }
+            },
+            6: { // Pramattavirat
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                     notes: "Only human beings can be monks/nuns" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक", "आहारक मिश्र", "आहारक काय"], 
+                     absent: ["कार्माण", "वैक्रियिक"], count: 11, total: 15,
+                     notes: "Including special translocation body" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "All gender inclinations still present" },
+                5: { present: ["प्रत्याख्यान (4)", "संज्वलन (4)", "नो-कषाय (5)"], 
+                     absent: ["अनन्तानुबंधी (4)", "अप्रत्याख्यान (4)"], count: 13, total: 25,
+                     notes: "Only total vow preventing passions remain" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong knowledge", "केवलज्ञान"], 
+                     count: 4, total: 8, notes: "Mind-reading knowledge possible" },
+                7: { present: ["सामायिक", "छेदोपस्थापना", "परिहार विशुद्धि"], 
+                     absent: ["असंयम", "संयमासंयम", "Higher restraints"], count: 3, total: 7,
+                     notes: "Three types of monastic discipline" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवलदर्शन"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["पीत", "पद्म", "शुक्ल"], absent: ["कृष्ण", "नील", "कापोत"], count: 3, total: 6,
+                     notes: "Only auspicious colors" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only capable of liberation" },
+                11: { present: ["क्षयोपशम", "उपशम", "क्षायिक"], absent: ["Wrong belief types"], count: 3, total: 6,
+                      notes: "Three types of right belief" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["प्रमत्त"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Sixth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["All 4"], absent: [], count: 4, total: 4,
+                      notes: "All instincts active" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Four knowledge types including mind-reading" },
+                20: { present: ["आर्त (3)", "धर्म (4)"], absent: ["रौद्र", "शुक्ल"], count: 7, total: 16,
+                      notes: "Righteous meditation dominates" },
+                21: { present: ["योग (11)", "कषाय (13)"], absent: ["अविरति", "Many passions"], count: 24, total: 57,
+                      notes: "Greatly reduced influx" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            7: { // Apramattavirat
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                     notes: "Only human beings" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक"], absent: ["कार्माण", "वैक्रियिक", "आहारक"], 
+                     count: 9, total: 15, notes: "No special body activities" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "Gender inclinations still present" },
+                5: { present: ["प्रत्याख्यान (4)", "संज्वलन (4)", "नो-कषाय (5)"], 
+                     absent: ["अनन्तानुबंधी", "अप्रत्याख्यान"], count: 13, total: 25,
+                     notes: "Same as 6th but with more care" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong", "केवल"], count: 4, total: 8,
+                     notes: "Four right knowledge types" },
+                7: { present: ["सामायिक", "छेदोपस्थापना", "परिहार विशुद्धि"], absent: ["Lower", "Higher"], 
+                     count: 3, total: 7, notes: "Careful monastic discipline" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवल"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["पीत", "पद्म", "शुक्ल"], absent: ["Dark colors"], count: 3, total: 6,
+                     notes: "Only bright auras" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["क्षयोपशम", "उपशम", "क्षायिक"], absent: ["Wrong belief"], count: 3, total: 6,
+                      notes: "Three right belief types" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["अप्रमत्त"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Seventh Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["आहार", "भय", "परिग्रह"], absent: ["मैथुन"], count: 3, total: 4,
+                      notes: "Sexual instinct begins to subside" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Same as 6th Gunasthan" },
+                20: { present: ["धर्म (4)"], absent: ["आर्त", "रौद्र", "शुक्ल"], count: 4, total: 16,
+                      notes: "Only righteous meditation" },
+                21: { present: ["योग (9)", "कषाय (13)"], absent: ["अविरति", "Many"], count: 22, total: 57,
+                      notes: "Further reduced influx" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            8: { // Apurvakarana
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                     notes: "Only human beings on spiritual ladder" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक"], absent: ["Death/birth related"], count: 9, total: 15,
+                     notes: "Limited activities during transformation" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "Gender inclinations still present" },
+                5: { present: ["प्रत्याख्यान (4)", "संज्वलन (4)", "नो-कषाय (5)"], absent: ["Gross passions"], 
+                     count: 13, total: 25, notes: "Same passions but weakening" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong", "केवल"], count: 4, total: 8,
+                     notes: "Four right knowledge types" },
+                7: { present: ["सामायिक", "छेदोपस्थापना"], absent: ["Lower", "परिहार", "Higher"], count: 2, total: 7,
+                     notes: "Two restraint types during ladder" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवल"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["शुक्ल"], absent: ["All dark colors"], count: 1, total: 6,
+                     notes: "Only pure white aura" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["क्षयोपशम", "उपशम"], absent: ["Wrong belief", "क्षायिक"], count: 2, total: 6,
+                      notes: "Two right belief types" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["अपूर्वकरण"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Eighth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["आहार", "भय", "परिग्रह"], absent: ["मैथुन"], count: 3, total: 4,
+                      notes: "Sexual instinct absent" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Four knowledge applications" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "First pure white meditation begins" },
+                21: { present: ["योग (9)", "कषाय (13)"], absent: ["अविरति", "Many"], count: 22, total: 57,
+                      notes: "Same as 7th Gunasthan" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            9: { // Anivrittikarana
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                     notes: "Only human beings" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक"], absent: ["Special bodies"], count: 9, total: 15,
+                     notes: "Same as 8th Gunasthan" },
+                4: { present: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"], absent: [], count: 3, total: 3,
+                     notes: "Gender inclinations weakening but present" },
+                5: { present: ["संज्वलन (3)", "नो-कषाय (4)"], absent: ["All gross passions", "संज्वलन माया"], 
+                     count: 7, total: 25, notes: "Subtle deceit destroyed, only 7 passions remain" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong", "केवल"], count: 4, total: 8,
+                     notes: "Four right knowledge types" },
+                7: { present: ["सामायिक", "छेदोपस्थापना"], absent: ["Lower", "Higher"], count: 2, total: 7,
+                     notes: "Two restraint types" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवल"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["शुक्ल"], absent: ["All others"], count: 1, total: 6,
+                     notes: "Only pure white aura" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["क्षयोपशम", "उपशम"], absent: ["Wrong", "क्षायिक"], count: 2, total: 6,
+                      notes: "Two right belief types" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["अनिवृत्ति"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Ninth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["आहार", "परिग्रह"], absent: ["भय", "मैथुन"], count: 2, total: 4,
+                      notes: "Fear instinct also destroyed" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Four knowledge applications" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "Pure white meditation continues" },
+                21: { present: ["योग (9)", "कषाय (7)"], absent: ["अविरति", "Many passions"], count: 16, total: 57,
+                      notes: "Reduced passions mean less influx" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            10: { // Sukshmasamparaya
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                      notes: "Only human beings" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक"], absent: ["Special bodies"], count: 9, total: 15,
+                     notes: "Same activities as 8th and 9th" },
+                4: { present: [], absent: ["All वेद"], count: 0, total: 3,
+                     notes: "All gender inclinations destroyed" },
+                5: { present: ["संज्वलन लोभ"], absent: ["All other 24"], count: 1, total: 25,
+                     notes: "Only subtle greed remains" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong", "केवल"], count: 4, total: 8,
+                     notes: "Four right knowledge types" },
+                7: { present: ["सूक्ष्मसांपराय"], absent: ["All others"], count: 1, total: 7,
+                     notes: "Special subtle passion restraint" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवल"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["शुक्ल"], absent: ["All others"], count: 1, total: 6,
+                     notes: "Only pure white aura" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["क्षयोपशम", "उपशम"], absent: ["Wrong", "क्षायिक"], count: 2, total: 6,
+                      notes: "Two right belief types" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["सूक्ष्म"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Tenth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: ["परिग्रह"], absent: ["आहार", "भय", "मैथुन"], count: 1, total: 4,
+                      notes: "Only possession instinct remains" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Four knowledge applications" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "Pure white meditation" },
+                21: { present: ["योग (9)", "संज्वलन लोभ (1)"], absent: ["Most"], count: 10, total: 57,
+                      notes: "Minimal influx with only subtle greed" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            11: { // Upashanta Moha
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                      notes: "Only human beings" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक"], absent: ["Special bodies"], count: 9, total: 15,
+                     notes: "Same as 10th Gunasthan" },
+                4: { present: [], absent: ["All वेद"], count: 0, total: 3,
+                     notes: "No gender inclinations" },
+                5: { present: [], absent: ["All 25 कषाय"], count: 0, total: 25,
+                     notes: "All passions subsided temporarily" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong", "केवल"], count: 4, total: 8,
+                     notes: "Four right knowledge types" },
+                7: { present: ["यथाख्यात"], absent: ["All others"], count: 1, total: 7,
+                     notes: "Perfect conduct restraint" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवल"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["शुक्ल"], absent: ["All others"], count: 1, total: 6,
+                     notes: "Only pure white aura" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["उपशम"], absent: ["All others"], count: 1, total: 6,
+                      notes: "Only subsided right belief" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["उपशांत"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Eleventh Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: [], absent: ["All 4"], count: 0, total: 4,
+                      notes: "All instincts subsided" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Four knowledge applications" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "Pure white meditation" },
+                21: { present: ["योग (9)"], absent: ["All कषाय", "अविरति"], count: 9, total: 57,
+                      notes: "Only yoga-based influx" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            12: { // Kshina Moha
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                      notes: "Only human beings" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["मन (4)", "वचन (4)", "औदारिक"], absent: ["Special bodies"], count: 9, total: 15,
+                     notes: "Same as 11th Gunasthan" },
+                4: { present: [], absent: ["All वेद"], count: 0, total: 3,
+                     notes: "No gender inclinations" },
+                5: { present: [], absent: ["All 25"], count: 0, total: 25,
+                     notes: "All passions permanently destroyed" },
+                6: { present: ["मति", "श्रुत", "अवधि", "मनःपर्यय"], absent: ["Wrong", "केवल"], count: 4, total: 8,
+                     notes: "Four right knowledge types" },
+                7: { present: ["यथाख्यात"], absent: ["All others"], count: 1, total: 7,
+                     notes: "Perfect conduct" },
+                8: { present: ["चक्षु", "अचक्षु", "अवधि"], absent: ["केवल"], count: 3, total: 4,
+                     notes: "Three perception types" },
+                9: { present: ["शुक्ल"], absent: ["All others"], count: 1, total: 6,
+                     notes: "Only pure white aura" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["क्षायिक"], absent: ["All others"], count: 1, total: 6,
+                      notes: "Only destroyed right belief" },
+                12: { present: ["संज्ञी"], absent: ["असंज्ञी"], count: 1, total: 2,
+                      notes: "Only rational" },
+                13: { present: ["आहारक"], absent: ["अनाहारक"], count: 1, total: 2,
+                      notes: "Food intake present" },
+                14: { present: ["क्षीण"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Twelfth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Only rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials" },
+                17: { present: ["All 10"], absent: [], count: 10, total: 10,
+                      notes: "All life forces" },
+                18: { present: [], absent: ["All 4"], count: 0, total: 4,
+                      notes: "All instincts destroyed" },
+                19: { present: ["ज्ञान (4)", "दर्शन (3)"], absent: ["Wrong", "केवल"], count: 7, total: 12,
+                      notes: "Four knowledge applications" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "Second pure white meditation" },
+                21: { present: ["योग (9)"], absent: ["All passions"], count: 9, total: 57,
+                      notes: "Only yoga-based influx" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            13: { // Sayogakevali
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                      notes: "Only human beings achieve omniscience" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Only five-sensed" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Only mobile beings" },
+                3: { present: ["सत्य मनोयोग", "अनुभय मनोयोग", "सत्य वचनयोग", "अनुभय वचनयोग", "औदारिक", "कार्माण", "औदारिक मिश्र"], 
+                     absent: ["False speech/mind", "वैक्रियिक", "आहारक"], count: 7, total: 15,
+                     notes: "Only true and neutral activities" },
+                4: { present: [], absent: ["All वेद"], count: 0, total: 3,
+                     notes: "No gender inclinations" },
+                5: { present: [], absent: ["All 25"], count: 0, total: 25,
+                     notes: "All passions destroyed" },
+                6: { present: ["केवलज्ञान"], absent: ["All others"], count: 1, total: 8,
+                     notes: "Only omniscience" },
+                7: { present: ["यथाख्यात"], absent: ["All others"], count: 1, total: 7,
+                     notes: "Perfect conduct" },
+                8: { present: ["केवलदर्शन"], absent: ["All others"], count: 1, total: 4,
+                     notes: "Only omnipercepion" },
+                9: { present: ["शुक्ल"], absent: ["All others"], count: 1, total: 6,
+                     notes: "Only pure white aura" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Only liberation-capable" },
+                11: { present: ["क्षायिक"], absent: ["All others"], count: 1, total: 6,
+                      notes: "Only destroyed right belief" },
+                12: { present: [], absent: ["संज्ञी", "असंज्ञी"], count: 0, total: 2,
+                      notes: "Beyond rational/non-rational distinction" },
+                13: { present: ["आहारक", "अनाहारक"], absent: [], count: 2, total: 2,
+                      notes: "Both states during activities" },
+                14: { present: ["सयोग"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Thirteenth Gunasthan only" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Originally rational five-sensed" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "All bio-potentials complete" },
+                17: { present: ["वचनबल", "कायबल", "श्वासोच्छ्वास", "आयु"], absent: ["5 senses", "मनोबल"], count: 4, total: 10,
+                      notes: "Limited life forces in omniscience" },
+                18: { present: [], absent: ["All 4"], count: 0, total: 4,
+                      notes: "No instincts remain" },
+                19: { present: ["केवलज्ञान", "केवलदर्शन"], absent: ["All others"], count: 2, total: 12,
+                      notes: "Only omniscient applications" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "Third pure white meditation" },
+                21: { present: ["योग (7)"], absent: ["All passions"], count: 7, total: 57,
+                      notes: "Minimal influx through activities" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Only human birth" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Only human sub-categories" }
+            },
+            14: { // Ayogakevali
+                0: { present: ["मनुष्यगति"], absent: ["नरकगति", "तिर्यंचगति", "देवगति"], count: 1, total: 4,
+                      notes: "Human body until liberation" },
+                1: { present: ["पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 5,
+                     notes: "Five-sensed body remains" },
+                2: { present: ["त्रसकायिक"], absent: ["All स्थावर"], count: 1, total: 6,
+                     notes: "Mobile body until liberation" },
+                3: { present: [], absent: ["All 15 योग"], count: 0, total: 15,
+                     notes: "All activities ceased" },
+                4: { present: [], absent: ["All वेद"], count: 0, total: 3,
+                     notes: "No gender inclinations" },
+                5: { present: [], absent: ["All 25"], count: 0, total: 25,
+                     notes: "All passions destroyed" },
+                6: { present: ["केवलज्ञान"], absent: ["All others"], count: 1, total: 8,
+                     notes: "Omniscience remains" },
+                7: { present: ["यथाख्यात"], absent: ["All others"], count: 1, total: 7,
+                     notes: "Perfect conduct" },
+                8: { present: ["केवलदर्शन"], absent: ["All others"], count: 1, total: 4,
+                     notes: "Omnipercepion remains" },
+                9: { present: [], absent: ["All लेश्या"], count: 0, total: 6,
+                     notes: "Beyond all colorations" },
+                10: { present: ["भव्य"], absent: ["अभव्य"], count: 1, total: 2,
+                      notes: "Liberation-capable achieving liberation" },
+                11: { present: ["क्षायिक"], absent: ["All others"], count: 1, total: 6,
+                      notes: "Destroyed right belief" },
+                12: { present: [], absent: ["Both"], count: 0, total: 2,
+                      notes: "Beyond distinctions" },
+                13: { present: ["अनाहारक"], absent: ["आहारक"], count: 1, total: 2,
+                      notes: "No food intake" },
+                14: { present: ["अयोग"], absent: ["All others"], count: 1, total: 14,
+                      notes: "Fourteenth Gunasthan - final" },
+                15: { present: ["संज्ञी पंचेन्द्रिय"], absent: ["All others"], count: 1, total: 19,
+                      notes: "Original form" },
+                16: { present: ["All 6"], absent: [], count: 6, total: 6,
+                      notes: "Bio-potentials complete" },
+                17: { present: ["आयु"], absent: ["All others"], count: 1, total: 10,
+                      notes: "Only life span remains briefly" },
+                18: { present: [], absent: ["All 4"], count: 0, total: 4,
+                      notes: "No instincts" },
+                19: { present: ["केवलज्ञान", "केवलदर्शन"], absent: ["All others"], count: 2, total: 12,
+                      notes: "Omniscient applications only" },
+                20: { present: ["शुक्ल (1)"], absent: ["All others"], count: 1, total: 16,
+                      notes: "Fourth pure white meditation" },
+                21: { present: [], absent: ["All 57"], count: 0, total: 57,
+                      notes: "No karmic influx" },
+                22: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 84,
+                      notes: "Human form until liberation" },
+                23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
+                      notes: "Human sub-categories only" }
+            }
+        };
+
+        // Use the simplified matrix data from original
+        const matrixData = {
+            1: [4,5,6,13,3,25,3,1,2,6,2,1,2,2,1,19,6,10,4,5,8,55,84,199.5],
+            2: [4,1,1,13,3,25,3,1,2,6,1,1,1,2,1,1,6,10,4,5,8,50,26,108.5],
+            3: [4,1,1,10,3,21,2,1,2,6,1,1,1,1,1,1,6,10,4,5,9,43,26,108.5],
+            4: [4,1,1,13,3,21,3,1,3,6,1,3,1,2,1,1,6,10,4,6,10,46,26,108.5],
+            5: [2,1,1,9,3,17,3,1,3,3,1,3,1,1,1,1,6,10,4,6,11,37,18,57.5],
+            6: [1,1,1,11,3,13,4,3,3,3,1,3,1,1,1,1,6,10,4,7,7,24,14,14],
+            7: [1,1,1,9,3,13,4,3,3,3,1,3,1,1,1,1,6,10,3,7,4,22,14,14],
+            8: [1,1,1,9,3,13,4,2,3,1,1,2,1,1,1,1,6,10,3,7,1,22,14,14],
+            9: [1,1,1,9,3,7,4,2,3,1,1,2,1,1,1,1,6,10,2,7,1,16,14,14],
+            10: [1,1,1,9,0,1,4,1,3,1,1,2,1,1,1,1,6,10,1,7,1,10,14,14],
+            11: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
+            12: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
+            13: [1,1,1,7,0,0,1,1,1,1,1,1,0,2,1,1,6,4,0,2,1,7,14,14],
+            14: [1,1,1,0,0,0,1,1,1,0,1,1,0,1,1,1,6,1,0,2,1,0,14,14]
+        };
+
+        // Transition rules
+        const transitionRules = {
+            1: { canGoTo: [3, 4, 5], description: "Can progress to mixed belief, right belief, or partial vows" },
+            2: { canGoTo: [1], description: "Falls back to false belief" },
+            3: { canGoTo: [1, 4], description: "Can fall to false belief or progress to right belief" },
+            4: { canGoTo: [1, 2, 3, 5, 7], description: "Multiple paths including direct jump to complete vows" },
+            5: { canGoTo: [1, 4, 6], description: "Can fall back or progress to monastic life" },
+            6: { canGoTo: [5, 7, 8], description: "Can progress to careful conduct or spiritual ladder" },
+            7: { canGoTo: [6, 8], description: "Can become careless or progress further" },
+            8: { canGoTo: [7, 9], description: "Can fall back or continue ascending" },
+            9: { canGoTo: [7, 10], description: "Can fall back or reach subtle greed stage" },
+            10: { canGoTo: [7, 11, 12], description: "Can fall, subside, or destroy delusion" },
+            11: { canGoTo: [1, 12, 13], description: "Can fall completely, switch paths, or achieve omniscience" },
+            12: { canGoTo: [13], description: "Progresses to omniscience" },
+            13: { canGoTo: [14], description: "Final transition to liberation" },
+            14: { canGoTo: [], description: "Liberation (Moksha) - No further transitions" }
+        };
+
+        // Helper functions
+        function getProgressColor(percentage) {
+            if (percentage === 0) return '#9CA3AF';
+            if (percentage < 25) return '#10B981';
+            if (percentage < 50) return '#F59E0B';
+            if (percentage < 75) return '#F97316';
+            return '#EF4444';
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-content`).classList.remove('hidden');
+            
+            // Add active class to selected tab
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            
+            // Load content if needed
+            if (tabName === 'overview' && !document.getElementById('gunasthan-list').innerHTML) {
+                loadOverview();
+            } else if (tabName === 'matrix' && !document.getElementById('matrix-table').innerHTML) {
+                loadMatrix();
+            } else if (tabName === 'transitions' && !document.getElementById('transitions-list').innerHTML) {
+                loadTransitions();
+            }
+        }
+
+        // Load Overview
+        function loadOverview() {
+            const container = document.getElementById('gunasthan-list');
+            let html = '';
+            
+            for (let i = 1; i <= 14; i++) {
+                const g = gunasthansData[i];
+                html += `
+                    <div class="gunasthan-card" onclick="showGunasthanDetail(${i})">
+                        <div style="display: flex; align-items: flex-start;">
+                            <span class="gunasthan-number" style="background: ${g.color}">${i}</span>
+                            <div style="flex: 1;">
+                                <div class="gunasthan-name">${g.nameHi}</div>
+                                <div class="gunasthan-sanskrit">${g.nameEn} - ${g.english}</div>
+                                <div class="gunasthan-description">${g.description}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Load Matrix with enhanced functionality
+        function loadMatrix() {
+            const container = document.getElementById('matrix-table');
+            let html = '<table class="matrix-table"><thead><tr><th class="thana-header">Thana</th>';
+            
+            // Header
+            for (let i = 1; i <= 14; i++) {
+                html += `<th>G${i}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+            
+            // Data rows
+            thanasData.forEach((thana, index) => {
+                html += `<tr><td class="thana-header">${thana.icon} ${thana.nameHi}</td>`;
+                
+                for (let g = 1; g <= 14; g++) {
+                    const count = matrixData[g][index];
+                    const total = thana.total;
+                    const percentage = (count / total) * 100;
+                    const color = getProgressColor(percentage);
+                    
+                    html += `
+                        <td onclick="showDetailedTooltip(${g}, ${index})">
+                            <div class="cell-fraction">${count}/${total}</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%; background: ${color}"></div>
+                            </div>
+                        </td>
+                    `;
+                }
+                
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Load Transitions
+        function loadTransitions() {
+            const container = document.getElementById('transitions-list');
+            let html = '';
+            
+            for (let i = 1; i <= 14; i++) {
+                const g = gunasthansData[i];
+                const rule = transitionRules[i];
+                
+                html += `
+                    <div class="transition-card">
+                        <div class="transition-header">
+                            <span class="gunasthan-number" style="background: ${g.color}">${i}</span>
+                            <div style="flex: 1;">
+                                <div class="gunasthan-name">${g.nameHi}</div>
+                                <div style="color: #6b7280; font-size: 14px; margin-top: 4px;">${rule.description}</div>
+                            </div>
+                        </div>
+                `;
+                
+                if (rule.canGoTo.length > 0) {
+                    html += '<div class="transition-targets">';
+                    rule.canGoTo.forEach(target => {
+                        html += `
+                            <div class="transition-target" onclick="scrollToGunasthan(${target})">
+                                <span class="transition-arrow">→</span> G${target}: ${gunasthansData[target].nameHi}
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                } else {
+                    html += '<div style="text-align: center; margin-top: 16px; color: #f59e0b; font-weight: 600; font-size: 18px;">🎯 Liberation (Moksha)</div>';
+                }
+                
+                html += '</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Enhanced tooltip with complete data
+        function showDetailedTooltip(gunasthanId, thanaIndex) {
+            const modal = document.getElementById('tooltip-modal');
+            const g = gunasthansData[gunasthanId];
+            const t = thanasData[thanaIndex];
+            const data = completeMatrixData[gunasthanId][thanaIndex];
+            
+            // Update header
+            document.getElementById('tooltip-title').textContent = t.nameHi;
+            document.getElementById('tooltip-subtitle').textContent = `${t.nameEn} - ${t.english}`;
+            document.getElementById('tooltip-gunasthan').textContent = `In ${g.nameHi} (G${gunasthanId})`;
+            
+            // Update stats
+            document.getElementById('stat-present').textContent = data.count;
+            document.getElementById('stat-absent').textContent = data.total - data.count;
+            document.getElementById('stat-total').textContent = data.total;
+            
+            // Build detailed body
+            let bodyHtml = '';
+            
+            // Present section
+            if (data.present && data.present.length > 0) {
+                bodyHtml += `
+                    <div class="tooltip-section present">
+                        <div class="section-title present">
+                            <span class="section-icon present">✓</span>
+                            Present (${data.present.length})
+                        </div>
+                        <div class="section-items">
+                            ${data.present.map(item => `<span class="item-tag">${item}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Absent section
+            if (data.absent && data.absent.length > 0) {
+                bodyHtml += `
+                    <div class="tooltip-section absent">
+                        <div class="section-title absent">
+                            <span class="section-icon absent">✗</span>
+                            Absent (${data.absent.length})
+                        </div>
+                        <div class="section-items">
+                            ${data.absent.map(item => `<span class="item-tag">${item}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Notes section
+            if (data.notes) {
+                bodyHtml += `<div class="tooltip-notes">${data.notes}</div>`;
+            }
+            
+            // Progress visualization
+            const percentage = (data.count / data.total * 100).toFixed(1);
+            bodyHtml += `
+                <div class="progress-info">
+                    <div class="progress-percentage">${percentage}%</div>
+                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
+                        ${data.count} out of ${data.total} characteristics present
+                    </div>
+                    <div class="progress-bar-large">
+                        <div class="progress-fill-large" style="width: ${percentage}%; background: ${getProgressColor(parseFloat(percentage))}"></div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('tooltip-body').innerHTML = bodyHtml;
+            
+            // Show modal
+            modal.classList.remove('hidden');
+        }
+
+        // Simple gunasthan detail (for overview)
+        function showGunasthanDetail(gunasthanId) {
+            const g = gunasthansData[gunasthanId];
+            const rule = transitionRules[gunasthanId];
+            
+            let message = `🔢 Gunasthan ${gunasthanId}: ${g.nameHi}\n`;
+            message += `📖 ${g.nameEn} - ${g.english}\n\n`;
+            message += `${g.description}\n\n`;
+            message += `🔄 Transitions: ${rule.description}\n`;
+            
+            if (rule.canGoTo.length > 0) {
+                message += `Can go to: ${rule.canGoTo.map(id => `G${id}`).join(', ')}`;
+            } else {
+                message += `🎯 Final stage - Liberation awaits!`;
+            }
+            
+            alert(message);
+        }
+
+        // Search functionality
+        function searchThanas(searchTerm) {
+            const results = document.getElementById('search-results');
+            
+            if (!searchTerm) {
+                results.innerHTML = '<div class="loading">Enter a search term to find Thanas...</div>';
+                return;
+            }
+            
+            const term = searchTerm.toLowerCase();
+            let html = '';
+            let found = false;
+            
+            thanasData.forEach((thana, index) => {
+                if (thana.nameHi.includes(searchTerm) || 
+                    thana.nameEn.toLowerCase().includes(term) ||
+                    thana.english.toLowerCase().includes(term)) {
+                    found = true;
+                    
+                    // Calculate summary across all gunasthans
+                    let minCount = Infinity, maxCount = 0;
+                    let minGunasthan = null, maxGunasthan = null;
+                    
+                    for (let g = 1; g <= 14; g++) {
+                        const count = matrixData[g][index];
+                        if (count < minCount) {
+                            minCount = count;
+                            minGunasthan = g;
+                        }
+                        if (count > maxCount) {
+                            maxCount = count;
+                            maxGunasthan = g;
+                        }
+                    }
+                    
+                    html += `
+                        <div class="gunasthan-card">
+                            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                <span style="font-size: 24px; margin-right: 12px;">${thana.icon}</span>
+                                <div>
+                                    <div style="font-size: 18px; font-weight: 600;">${thana.nameHi}</div>
+                                    <div style="color: #6b7280;">${thana.nameEn} - ${thana.english}</div>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+                                <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border: 1px solid #86efac;">
+                                    <div style="font-size: 12px; color: #16a34a;">Maximum in</div>
+                                    <div style="font-weight: 600;">G${maxGunasthan}: ${maxCount}/${thana.total}</div>
+                                </div>
+                                <div style="background: #fef2f2; padding: 12px; border-radius: 8px; border: 1px solid #fca5a5;">
+                                    <div style="font-size: 12px; color: #dc2626;">Minimum in</div>
+                                    <div style="font-weight: 600;">G${minGunasthan}: ${minCount}/${thana.total}</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 12px;">
+                                <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Subtypes (${thana.subtypes.length}):</div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    ${thana.subtypes.slice(0, 5).map(s => `<span class="item-tag">${s}</span>`).join('')}
+                                    ${thana.subtypes.length > 5 ? `<span class="item-tag">+${thana.subtypes.length - 5} more</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (!found) {
+                html = '<div class="loading">No results found. Try searching in Hindi or English...</div>';
+            }
+            
+            results.innerHTML = html;
+        }
+
+        // Close tooltip
+        function closeTooltip(event) {
+            if (!event || event.target.id === 'tooltip-modal' || event.target.classList.contains('close-button')) {
+                document.getElementById('tooltip-modal').classList.add('hidden');
+            }
+        }
+
+        // Helper function to scroll to a gunasthan
+        function scrollToGunasthan(gunasthanId) {
+            showTab('overview');
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.gunasthan-card');
+                if (cards[gunasthanId - 1]) {
+                    cards[gunasthanId - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    cards[gunasthanId - 1].style.animation = 'pulse 1s ease-in-out';
+                    setTimeout(() => {
+                        cards[gunasthanId - 1].style.animation = '';
+                    }, 1000);
+                }
+            }, 100);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOverview();
+        });
+
+        // Make functions global
+        window.showTab = showTab;
+        window.searchThanas = searchThanas;
+        window.showGunasthanDetail = showGunasthanDetail;
+        window.showDetailedTooltip = showDetailedTooltip;
+        window.closeTooltip = closeTooltip;
+        window.scrollToGunasthan = scrollToGunasthan;
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
