@@ -1,5 +1,5 @@
 // Complete Gunasthan App Data and Functions
-// Fixed version with modal close issue resolved
+// Fixed version with modal and service worker issues resolved
 
 // Gunasthan Data
 const gunasthansData = {
@@ -170,13 +170,8 @@ const transitionRules = {
 // Initialize app
 let currentTab = 'overview';
 
-// Service Worker for offline functionality
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
-}
-
 // Tab switching
-function showTab(tabName) {
+window.showTab = function(tabName) {
   // Hide all tabs
   document.querySelectorAll('.tab-content').forEach(content => {
     content.classList.add('hidden');
@@ -309,7 +304,7 @@ function loadTransitions() {
 }
 
 // Search functionality
-function searchThanas(searchTerm) {
+window.searchThanas = function(searchTerm) {
   const results = document.getElementById('search-results');
   
   if (!searchTerm) {
@@ -344,7 +339,7 @@ function searchThanas(searchTerm) {
 }
 
 // Show details
-function showGunasthanDetail(gunasthanId) {
+window.showGunasthanDetail = function(gunasthanId) {
   const g = gunasthansData[gunasthanId];
   const modal = document.getElementById('modal');
   const title = document.getElementById('modal-title');
@@ -383,7 +378,7 @@ function showGunasthanDetail(gunasthanId) {
   modal.classList.remove('hidden');
 }
 
-function showCellDetail(gunasthanId, thanaIndex) {
+window.showCellDetail = function(gunasthanId, thanaIndex) {
   const g = gunasthansData[gunasthanId];
   const t = thanasData[thanaIndex];
   const count = matrixData[gunasthanId][thanaIndex];
@@ -420,10 +415,13 @@ function showCellDetail(gunasthanId, thanaIndex) {
   modal.classList.remove('hidden');
 }
 
-function closeModal(event) {
+window.closeModal = function(event) {
   // Close modal when clicking on modal background or close button
-  if (!event || event.target.id === 'modal' || event.target.classList.contains('modal-close')) {
-    document.getElementById('modal').classList.add('hidden');
+  if (!event || event.target.id === 'modal' || event.target.classList.contains('close-button')) {
+    const modal = document.getElementById('modal');
+    if (modal) {
+      modal.classList.add('hidden');
+    }
   }
 }
 
@@ -437,17 +435,14 @@ function getProgressColor(percentage) {
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', function() {
-  loadOverview();
-  
-  // Add click event listener to modal background
+  // Make sure modal is hidden on start
   const modal = document.getElementById('modal');
   if (modal) {
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        closeModal(e);
-      }
-    });
+    modal.classList.add('hidden');
   }
+  
+  // Load overview
+  loadOverview();
   
   // Add keyboard event listener for ESC key
   document.addEventListener('keydown', function(e) {
@@ -456,10 +451,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
-// Emergency modal fix - add this at the very end of app.js
-setTimeout(function() {
-  const modal = document.getElementById('modal');
-  if (modal && !modal.classList.contains('hidden')) {
-    modal.classList.add('hidden');
-  }
-}, 1000);
