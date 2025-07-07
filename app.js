@@ -456,3 +456,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+// Emergency modal fix - add this at the very end of app.js
+setTimeout(function() {
+  const modal = document.getElementById('modal');
+  if (modal && !modal.classList.contains('hidden')) {
+    modal.classList.add('hidden');
+  }
+}, 1000);
