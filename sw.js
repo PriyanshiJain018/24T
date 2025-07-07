@@ -1,14 +1,12 @@
 // Service Worker for Offline Support
-// This file name must be: sw.js
+// Fixed version
 
 const CACHE_NAME = 'gunasthan-v1';
 const urlsToCache = [
   './',
   './index.html',
-  './app.js',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
+  './app.js'
+  // Removed manifest.json and icon files that might not exist
 ];
 
 // Install event - cache all files
@@ -17,7 +15,14 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        // Cache each file individually to handle errors
+        return Promise.all(
+          urlsToCache.map(url => {
+            return cache.add(url).catch(err => {
+              console.log('Failed to cache:', url, err);
+            });
+          })
+        );
       })
   );
 });
