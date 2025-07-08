@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choubees Thana: Transitions Game Mode</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .game-stage {
+      display: none;
+      padding: 20px;
+      border-radius: 12px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #008cba;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f75;
+    }
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #b22222;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧘 Choubees Thana: Gunasthana Transition Game</h1>
+
+  <div id="gunasthan-1" class="game-stage">
+    <h2>Gunasthan 1: Mithyadrishti</h2>
+    <p>Aap ek bhramit jeev hain jo samsar mein bhatak rahe hain. Aap agla kadam kya uthayenge?</p>
+    <button onclick="chooseGunasthan(2)">Go to Gunasthan 2</button>
+    <button onclick="chooseGunasthan(3)">Go to Gunasthan 3</button>
+    <button onclick="chooseGunasthan(4)">Go to Gunasthan 4</button>
+    <p id="msg-1" class="message"></p>
+  </div>
+
+  <div id="gunasthan-4" class="game-stage">
+    <h2>Gunasthan 4: Samyag Mithyatva</h2>
+    <p>Aapne satya ka kuch anubhav kiya hai, lekin abhi bhi sthir nahin hue hain. Samajhdari se chunav karein.</p>
+    <button onclick="chooseGunasthan(5)">Go to Gunasthan 5</button>
+    <button onclick="chooseGunasthan(3)">Go to Gunasthan 3</button>
+    <p id="msg-4" class="message"></p>
+  </div>
+
+  <div id="gunasthan-5" class="game-stage">
+    <h2>Gunasthan 5: Samyak Darshan + Charitra</h2>
+    <p>Ab aapke paas Samyak Charitra hai. Yatra aur gahri ho rahi hai.</p>
+    <p class="message">(Aage ka game logic yahaan jodna hai...)</p>
+  </div>
+
+  <script>
+    let currentStage = 1;
+    let punishmentTimeout = null;
+
+    function showStage(n) {
+      document.querySelectorAll('.game-stage').forEach(stage => stage.style.display = 'none');
+      document.getElementById(`gunasthan-${n}`).style.display = 'block';
+      document.getElementById(`msg-${n}`)?.textContent = '';
+      currentStage = n;
+    }
+
+    function chooseGunasthan(target) {
+      clearTimeout(punishmentTimeout);
+
+      if (currentStage === 1) {
+        if (target === 2) {
+          triggerMaran("Gun. 2", 1);
+        } else if (target === 3) {
+          document.getElementById('msg-1').textContent = "❌ Aapne abhi tak Samyak Darshan prapt nahi kiya hai. Samyak Darshan ke bina Gunasthan 3 sambhav nahi hai.";
+        } else if (target === 4) {
+          askQuizForG4();
+        }
+      } else if (currentStage === 4) {
+        if (target === 3) {
+          showStage(3); // Allowed fallback
+        } else if (target === 5) {
+          askQuizForG5();
+        }
+      }
+    }
+
+    function triggerMaran(targetG, stayStage) {
+      const msg = `❌ Galat marg ka chayan kiya gaya. Aap ${targetG} ki or gaye aur parinaam ke roop mein ek maran (मरण) hua. Agle 5 minute tak aap Gunasthan ${stayStage} mein hi rahenge.`;
+      document.getElementById(`msg-${stayStage}`).textContent = msg;
+
+      punishmentTimeout = setTimeout(() => {
+        document.getElementById(`msg-${stayStage}`).textContent = "⏳ 5 minute beet gaye hain. Ab aap phir se prayaas kar sakte hain.";
+      }, 5 * 60 * 1000);
+    }
+
+    function askQuizForG4() {
+      let answer = prompt("Gunasthan 4 pahunchne ke liye aapko kya chahiye?\nA. Samyak Charitra\nB. Samyak Darshan\nC. Tapasya");
+      if (answer.toLowerCase().includes("b") || answer.includes("दर्शन")) {
+        alert("✅ Sahi uttar! Ab aapne Samyak Darshan prapt kiya.");
+        showStage(4);
+      } else {
+        triggerMaran("Gun. 4", 1);
+      }
+    }
+
+    function askQuizForG5() {
+      let answer = prompt("Gunasthan 5 pahunchne ke liye aapko kya chahiye?\nA. Samyak Darshan\nB. Samyak Charitra\nC. Vishesh Tapasya");
+      if (answer.toLowerCase().includes("b") || answer.includes("चरित्र")) {
+        alert("✅ Sahi uttar! Ab aap Samyak Charitra ke saath aage badh sakte hain.");
+        showStage(5);
+      } else {
+        triggerMaran("Gun. 5", 4);
+      }
+    }
+
+    // Start the game at Gunasthan 1
+    showStage(1);
+  </script>
+</body>
+</html>
