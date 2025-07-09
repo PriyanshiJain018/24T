@@ -2766,31 +2766,28 @@
             
             container.innerHTML = html;
         }
-
-        // Enhanced tooltip with complete data and navigation to definitions
+        // Replace your existing showDetailedTooltip function with this accurate version
         function showDetailedTooltip(gunasthanId, thanaIndex) {
             const modal = document.getElementById('tooltip-modal');
             const g = gunasthansData[gunasthanId];
             const t = thanasData[thanaIndex];
             
-            // Get count from matrix data
-            const count = matrixData[gunasthanId][thanaIndex];
-            const total = t.total;
-            
-            // Create simplified present/absent arrays based on count
-            let present = [];
-            let absent = [];
-            
-            if (count === total) {
-                present = t.subtypes;
-                absent = [];
-            } else if (count === 0) {
-                present = [];
-                absent = t.subtypes;
+            // Get accurate data from completeMatrixData
+            let cellData;
+            if (completeMatrixData[gunasthanId] && completeMatrixData[gunasthanId][thanaIndex]) {
+                cellData = completeMatrixData[gunasthanId][thanaIndex];
             } else {
-                // For partial counts, show some present and some absent
-                present = t.subtypes.slice(0, count);
-                absent = t.subtypes.slice(count);
+                // Fallback for incomplete data - use simple calculation
+                const count = matrixData[gunasthanId][thanaIndex];
+                const total = t.total;
+                
+                cellData = {
+                    present: count === total ? t.subtypes : t.subtypes.slice(0, count),
+                    absent: count === 0 ? t.subtypes : (count === total ? [] : t.subtypes.slice(count)),
+                    count: count,
+                    total: total,
+                    notes: `${count}/${total} characteristics present`
+                };
             }
             
             // Update header
@@ -2799,50 +2796,59 @@
             document.getElementById('tooltip-gunasthan').textContent = `In ${g.nameHi} (G${gunasthanId})`;
             
             // Update stats
-            document.getElementById('stat-present').textContent = count;
-            document.getElementById('stat-absent').textContent = total - count;
-            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-present').textContent = cellData.count;
+            document.getElementById('stat-absent').textContent = cellData.total - cellData.count;
+            document.getElementById('stat-total').textContent = cellData.total;
             
-            // Build detailed body
+            // Build detailed body with accurate present/absent data
             let bodyHtml = '';
             
             // Present section
-            if (present.length > 0) {
+            if (cellData.present.length > 0) {
                 bodyHtml += `
                     <div class="tooltip-section present">
                         <div class="section-title present">
                             <span class="section-icon present">✓</span>
-                            Present (${present.length})
+                            Present (${cellData.present.length})
                         </div>
                         <div class="section-items">
-                            ${present.map(item => `<span class="item-tag" onclick="findAndShowDefinition('${item}')">${item}</span>`).join('')}
+                            ${cellData.present.map(item => `<span class="item-tag" onclick="findAndShowDefinition('${item}')">${item}</span>`).join('')}
                         </div>
                     </div>
                 `;
             }
             
             // Absent section
-            if (absent.length > 0) {
+            if (cellData.absent.length > 0) {
                 bodyHtml += `
                     <div class="tooltip-section absent">
                         <div class="section-title absent">
                             <span class="section-icon absent">✗</span>
-                            Absent (${absent.length})
+                            Absent (${cellData.absent.length})
                         </div>
                         <div class="section-items">
-                            ${absent.map(item => `<span class="item-tag" onclick="findAndShowDefinition('${item}')">${item}</span>`).join('')}
+                            ${cellData.absent.map(item => `<span class="item-tag" onclick="findAndShowDefinition('${item}')">${item}</span>`).join('')}
                         </div>
                     </div>
                 `;
             }
             
+            // Add notes if available
+            if (cellData.notes) {
+                bodyHtml += `
+                    <div class="tooltip-notes">
+                        <strong>विशेष:</strong> ${cellData.notes}
+                    </div>
+                `;
+            }
+            
             // Progress visualization
-            const percentage = (count / total * 100).toFixed(1);
+            const percentage = (cellData.count / cellData.total * 100).toFixed(1);
             bodyHtml += `
                 <div class="progress-info">
                     <div class="progress-percentage">${percentage}%</div>
                     <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
-                        ${count} out of ${total} characteristics present
+                        ${cellData.count} out of ${cellData.total} characteristics present
                     </div>
                     <div class="progress-bar-large">
                         <div class="progress-fill-large" style="width: ${percentage}%; background: ${getProgressColor(parseFloat(percentage))}"></div>
@@ -2854,20 +2860,6 @@
             
             // Show modal
             modal.classList.remove('hidden');
-        }
-        // Enhanced find and show definition function
-        function findAndShowDefinition(term) {
-            // Close current modal
-            closeTooltip();
-            
-            // Switch to definitions tab
-            showTab('definitions');
-            
-            // Search for the term in definitions (this will auto-expand and highlight)
-            searchDefinitions(term);
-            
-            // The enhanced searchDefinitions function now handles scrolling and highlighting automatically
-            // No need for additional setTimeout logic here as it's built into the search function
         }
 
         // Search definitions
