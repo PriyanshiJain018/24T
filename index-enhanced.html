@@ -54,10 +54,12 @@
             top: 68px;
             z-index: 90;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow-x: auto;
         }
         
         .tab {
             flex: 1;
+            min-width: 80px;
             padding: 14px 8px;
             text-align: center;
             border: none;
@@ -68,6 +70,7 @@
             transition: all 0.3s ease;
             position: relative;
             color: #6b7280;
+            white-space: nowrap;
         }
         
         .tab:hover {
@@ -435,6 +438,14 @@
             font-size: 12px;
             border: 1px solid #e5e7eb;
             color: #374151;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .item-tag:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
         }
         
         .tooltip-notes {
@@ -497,6 +508,151 @@
             outline: none;
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Definitions Styles */
+        .definitions-container {
+            max-width: 100%;
+        }
+        
+        .category-section {
+            margin-bottom: 24px;
+        }
+        
+        .category-header {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .category-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .definition-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .definition-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            border-color: #d1d5db;
+        }
+        
+        .definition-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .definition-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .definition-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .definition-content {
+            color: #4b5563;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        
+        .know-more-btn {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .know-more-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .additional-notes {
+            margin-top: 12px;
+            padding: 12px;
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #78350f;
+            line-height: 1.5;
+        }
+        
+        .sub-definitions {
+            margin-top: 16px;
+            padding-left: 16px;
+            border-left: 3px solid #e5e7eb;
+        }
+        
+        .sub-definition {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .sub-definition:hover {
+            background: #f3f4f6;
+        }
+        
+        .sub-definition-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        
+        .sub-definition-content {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .collapsible-content.expanded {
+            max-height: 5000px;
         }
         
         /* Transitions */
@@ -575,8 +731,9 @@
             }
             
             .tab {
-                font-size: 12px;
-                padding: 12px 4px;
+                font-size: 11px;
+                padding: 12px 6px;
+                min-width: 70px;
             }
             
             .matrix-table {
@@ -609,6 +766,10 @@
             
             .tooltip-content {
                 max-height: 90vh;
+            }
+            
+            .definition-card {
+                padding: 16px;
             }
         }
         
@@ -645,6 +806,12 @@
             font-size: 14px;
             line-height: 1.5;
         }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -657,6 +824,7 @@
         <button class="tab active" onclick="showTab('overview')">Overview</button>
         <button class="tab" onclick="showTab('matrix')">Matrix</button>
         <button class="tab" onclick="showTab('transitions')">Transitions</button>
+        <button class="tab" onclick="showTab('definitions')">Definitions</button>
         <button class="tab" onclick="showTab('search')">Search</button>
     </div>
     
@@ -678,6 +846,7 @@
                 <div class="info-description">
                     Comprehensive mapping of 24 spiritual attributes across all 14 Gunasthanas. 
                     Click any cell to see detailed breakdown of present and absent characteristics.
+                    Click on individual terms to see their definitions.
                 </div>
             </div>
             <div class="matrix-container">
@@ -694,6 +863,18 @@
                 </div>
             </div>
             <div id="transitions-list"></div>
+        </div>
+        
+        <div id="definitions-content" class="tab-content hidden">
+            <div class="info-section">
+                <div class="info-title">Comprehensive Definitions</div>
+                <div class="info-description">
+                    Detailed explanations of all Jain philosophical terms and concepts used in the application.
+                    Search or browse by category to understand the meanings and significance.
+                </div>
+            </div>
+            <input type="text" class="search-box" placeholder="Search definitions (Hindi/English/Sanskrit)..." oninput="searchDefinitions(this.value)">
+            <div id="definitions-list"></div>
         </div>
         
         <div id="search-content" class="tab-content hidden">
@@ -906,11 +1087,741 @@
               subtypes: ["199.5 लाख करोड़ उप-श्रेणियाँ"] }
         ];
 
-        // Complete matrix data with detailed mappings
+        // Complete definitions database from markdown - ALL DEFINITIONS INCLUDED
+        const definitionsDatabase = {
+            "गति-मार्गणा": {
+                title: "गति मार्गणा",
+                titleEn: "Gati Margana",
+                english: "States of Existence Classification",
+                description: "जिस कर्म के उदय से जीव नरक, तिर्यञ्च, मनुष्य और देवपने को प्राप्त होता है, उसे गति कहते हैं। गति की अपेक्षा जीवों का परिचय करना गति मार्गणा है।",
+                definitions: {
+                    "गति": {
+                        nameHi: "गति",
+                        nameEn: "Gati",
+                        english: "State of Existence",
+                        definition: "जिस कर्म के उदय से जीव नरक, तिर्यञ्च, मनुष्य और देवपने को प्राप्त होता है, उसे गति कहते हैं।",
+                        subtypes: {
+                            "नरकगति": {
+                                nameHi: "नरकगति",
+                                nameEn: "Narakgati",
+                                english: "Hell State",
+                                definition: "जिस कर्म का निमित्त पाकर आत्मा नारक भाव का प्राप्त होता है, उसे नरकगति कहते हैं।"
+                            },
+                            "तिर्यञ्चगति": {
+                                nameHi: "तिर्यञ्चगति", 
+                                nameEn: "Tiryanchgati",
+                                english: "Animal State",
+                                definition: "जिस कर्म का निमित्त पाकर आत्मा तिर्यञ्च भाव को प्राप्त होता है, उसे तिर्यञ्चगति कहते हैं।"
+                            },
+                            "मनुष्यगति": {
+                                nameHi: "मनुष्यगति",
+                                nameEn: "Manushyagati", 
+                                english: "Human State",
+                                definition: "जिस कर्म का निमित्त पाकर आत्मा मनुष्य भाव को प्राप्त होता है, उसे मनुष्य गति कहते हैं।"
+                            },
+                            "देवगति": {
+                                nameHi: "देवगति",
+                                nameEn: "Devgati",
+                                english: "Celestial State", 
+                                definition: "जिस कर्म का निमित्त पाकर आत्मा देव भाव को प्राप्त होता है, उसे देवगति कहते हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "इन्द्रिय-मार्गणा": {
+                title: "इन्द्रिय मार्गणा",
+                titleEn: "Indriya Margana", 
+                english: "Sense Classification",
+                description: "एकेन्द्रियादि जातिनामकर्म के उदय से जीव की जो एकेन्द्रिय आदि अवस्था होती है, उसे इन्द्रिय कहते हैं। इन्द्रिय की अपेक्षा जीवों का परिचय करना इन्द्रिय मार्गणा है।",
+                definitions: {
+                    "इन्द्रिय": {
+                        nameHi: "इन्द्रिय",
+                        nameEn: "Indriya",
+                        english: "Senses",
+                        definition: "एकेन्द्रियादि जातिनामकर्म के उदय से जीव की जो एकेन्द्रिय आदि अवस्था होती है, उसे इन्द्रिय कहते हैं।",
+                        subtypes: {
+                            "एकेन्द्रिय": {
+                                nameHi: "एकेन्द्रिय",
+                                nameEn: "Ekendriya",
+                                english: "One-sensed",
+                                definition: "केवल स्पर्शन इन्द्रिय वाले जीव"
+                            },
+                            "द्वीन्द्रिय": {
+                                nameHi: "द्वीन्द्रिय", 
+                                nameEn: "Dwindriya",
+                                english: "Two-sensed",
+                                definition: "जिसके स्पर्शन और रसना ये दो इन्द्रियाँ होती हैं, उसे दो इन्द्रिय जीव कहते हैं। जैसे- लट, कंचुआ, जोंक, सीप, कौड़ी, शंख आदि।"
+                            },
+                            "त्रीन्द्रिय": {
+                                nameHi: "त्रीन्द्रिय",
+                                nameEn: "Trindriya", 
+                                english: "Three-sensed",
+                                definition: "जिसके स्पर्शन, रसना और घ्राण ये तीन इन्द्रियाँ होती हैं, उसे तीन इन्द्रिय जीव कहते हैं। जैसे- चींटी, खटमल, बिच्छू, घुन, गिजाई आदि।"
+                            },
+                            "चतुरिन्द्रिय": {
+                                nameHi: "चतुरिन्द्रिय",
+                                nameEn: "Chaturindriya",
+                                english: "Four-sensed", 
+                                definition: "जिसके स्पर्शन, रसना, घ्राण और चक्षु, ये चार इन्द्रियाँ होती हैं, उसे चार इन्द्रिय जीव कहते हैं। जैसे- भौंरा, मच्छर, टिड्डी, मधुमक्खी, मक्खी, बर्र, तितैया आदि।"
+                            },
+                            "पंचेन्द्रिय": {
+                                nameHi: "पंचेन्द्रिय",
+                                nameEn: "Panchendriya",
+                                english: "Five-sensed",
+                                definition: "जिनके स्पर्शन, रसना, घ्राण चक्षु और कर्ण ये पाँच इन्द्रियाँ होती हैं। असंज्ञी पंचेन्द्रिय में मन नहीं होता, संज्ञी पंचेन्द्रिय में मन भी होता है।"
+                            }
+                        }
+                    }
+                }
+            },
+            "काय-मार्गणा": {
+                title: "काय मार्गणा", 
+                titleEn: "Kaya Margana",
+                english: "Body Classification",
+                description: "आत्मा की प्रवृत्ति द्वारा संचित किए गए पुद्गल पिंड को काय कहते हैं। काय की अपेक्षा जीवों का परिचय करना काय मार्गणा है।",
+                definitions: {
+                    "काय": {
+                        nameHi: "काय",
+                        nameEn: "Kaya", 
+                        english: "Body",
+                        definition: "आत्मा की प्रवृत्ति द्वारा संचित किए गए पुद्गल पिंड को काय कहते हैं।",
+                        subtypes: {
+                            "पृथ्वीकायिक": {
+                                nameHi: "पृथ्वीकायिक",
+                                nameEn: "Prithvikayik", 
+                                english: "Earth-bodied",
+                                definition: "पृथ्वी को शरीर रूप में धारण करने वाले जीव"
+                            },
+                            "जलकायिक": {
+                                nameHi: "जलकायिक",
+                                nameEn: "Jalkayik",
+                                english: "Water-bodied", 
+                                definition: "जल को शरीर रूप में धारण करने वाले जीव"
+                            },
+                            "अग्निकायिक": {
+                                nameHi: "अग्निकायिक",
+                                nameEn: "Agnikayik",
+                                english: "Fire-bodied",
+                                definition: "अग्नि को शरीर रूप में धारण करने वाले जीव"
+                            },
+                            "वायुकायिक": {
+                                nameHi: "वायुकायिक", 
+                                nameEn: "Vayukayik",
+                                english: "Air-bodied",
+                                definition: "वायु को शरीर रूप में धारण करने वाले जीव"
+                            },
+                            "वनस्पतिकायिक": {
+                                nameHi: "वनस्पतिकायिक",
+                                nameEn: "Vanaspatikayik",
+                                english: "Plant-bodied",
+                                definition: "वनस्पति को शरीर रूप में धारण करने वाले जीव। इनमें प्रत्येक और साधारण दो भेद हैं।"
+                            },
+                            "त्रसकायिक": {
+                                nameHi: "त्रसकायिक",
+                                nameEn: "Trasakayik", 
+                                english: "Mobile-bodied",
+                                definition: "द्वीन्द्रिय से पंचेन्द्रिय तक के गतिशील जीव"
+                            }
+                        }
+                    }
+                }
+            },
+            "योग-मार्गणा": {
+                title: "योग मार्गणा",
+                titleEn: "Yoga Margana",
+                english: "Activity Classification", 
+                description: "काय, वचन व मन के निमित्त से होने वाले आत्मप्रदेशों के हलन-चलन को योग कहते हैं। योग की अपेक्षा जीवों का परिचय करना योग मार्गणा है।",
+                definitions: {
+                    "योग": {
+                        nameHi: "योग",
+                        nameEn: "Yoga",
+                        english: "Activity",
+                        definition: "काय, वचन व मन के निमित्त से होने वाले आत्मप्रदेशों के हलन-चलन को योग कहते हैं।",
+                        subtypes: {
+                            "सत्य मनोयोग": {
+                                nameHi: "सत्य मनोयोग",
+                                nameEn: "Satya Manoyoga",
+                                english: "True Mental Activity",
+                                definition: "सत्य के विषय में होने वाली मन की प्रवृत्ति को सत्य कहते हैं। जैसे- \"यह जल है\"।"
+                            },
+                            "असत्य मनोयोग": {
+                                nameHi: "असत्य मनोयोग", 
+                                nameEn: "Asatya Manoyoga",
+                                english: "False Mental Activity",
+                                definition: "असत्य के विषय में होने वाली मन की प्रवृत्ति को असत्य कहते हैं। जैसे- मृगमरीचिका को जल कहना।"
+                            },
+                            "उभय मनोयोग": {
+                                nameHi: "उभय मनोयोग",
+                                nameEn: "Ubhaya Manoyoga",
+                                english: "Mixed Mental Activity", 
+                                definition: "दोनों के विषयभूत पदार्थ को उभय कहते हैं। जैसे- कमण्डलु को घट कहना, क्योंकि कमण्डलु घट का कार्य करता है।"
+                            },
+                            "अनुभय मनोयोग": {
+                                nameHi: "अनुभय मनोयोग",
+                                nameEn: "Anubhaya Manoyoga",
+                                english: "Neutral Mental Activity",
+                                definition: "जो दोनों ही सत्य और असत्य का विषय नहीं होता है ऐसे पदार्थ को अनुभय कहते हैं।",
+                                additionalNotes: "जैसे- गुरुवर आचार्य श्री विद्यासागरजी महाराज से श्रावक कहे हमारे नगर में आइये? उत्तर मिलेगा \"देखो\"। यह अनुभय वचन योग है। न सत्य है और न असत्य है।"
+                            },
+                            "कार्माण काययोग": {
+                                nameHi: "कार्माण काययोग",
+                                nameEn: "Karmana Kayayoga",
+                                english: "Karmic Body Activity",
+                                definition: "जब यह जीव मरण कर नया शरीर धारण करने के लिए विग्रह गति में जाता है तब कार्मण शरीर के निमित्त से आत्म प्रदेशों का जो परिस्पंदन होता है, उसे कार्मण काययोग कहते हैं।",
+                                additionalNotes: "विग्रहगति के अलावा केवली भगवान् के प्रतर और लोकपूरण समुद्घात में भी कार्मण काय योग होता है।"
+                            },
+                            "आहारक काययोग": {
+                                nameHi: "आहारक काययोग",
+                                nameEn: "Aharaka Kayayoga",
+                                english: "Translocation Body Activity",
+                                definition: "छठवें गुणस्थानवर्ती मुनि के सूक्ष्म तत्त्व के विषय में जिज्ञासा होने पर उनके मस्तक से एक हाथ ऊंचा सफेद रंग का पुतला निकलता है। वह जहाँ कहीं भी केवली हों, वहाँ अपनी जिज्ञासा का समाधान करके वापस आ जाता है, इसे आहारक काय कहते हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "वेद-मार्गणा": {
+                title: "वेद मार्गणा",
+                titleEn: "Veda Margana",
+                english: "Gender Classification",
+                description: "\"विद्यते इति वेदः\" जो वेदा जाए, अनुभव किया जाए उसे वेद कहते हैं। वेद की अपेक्षा से जीवों का परिचय करना वेद मार्गणा है।",
+                definitions: {
+                    "वेद": {
+                        nameHi: "वेद",
+                        nameEn: "Veda", 
+                        english: "Gender",
+                        definition: "\"विद्यते इति वेदः\" जो वेदा जाए, अनुभव किया जाए उसे वेद कहते हैं।",
+                        subtypes: {
+                            "स्त्रीवेद": {
+                                nameHi: "स्त्रीवेद",
+                                nameEn: "Striveda",
+                                english: "Feminine Gender",
+                                definition: "वेद नोकषाय के उदय से स्त्री की पुरुषाभिलाषा को भाव वेद कहते हैं। तथा नामकर्म के उदय से उत्पन्न स्त्री के बाह्य चिह्नों को द्रव्यवेद कहते हैं।"
+                            },
+                            "पुरुषवेद": {
+                                nameHi: "पुरुषवेद",
+                                nameEn: "Purushveda", 
+                                english: "Masculine Gender",
+                                definition: "पुरुष की स्त्री सम्बन्धी अभिलाषा को भाव वेद कहते हैं। पुरुषवेद तृण की आग के समान होता है।"
+                            },
+                            "नपुंसकवेद": {
+                                nameHi: "नपुंसकवेद",
+                                nameEn: "Napumsakveda",
+                                english: "Neuter Gender",
+                                definition: "नपुंसक की उभयमुखी अभिलाषा को भाव वेद कहते हैं। नपुंसकवेद ईंट पकाने के अवे की आग के समान होता है।"
+                            }
+                        },
+                        additionalNotes: "पुरुषवेद तृण की आग के समान, स्त्रीवेद कंडे की आग के समान एवं नपुंसकवेद ईंट पकाने के अवे की आग के समान होता है। एकेन्द्रिय से चार इन्द्रिय तक नियम से द्रव्यवेद व भाववेद नपुंसक ही रहता है।"
+                    }
+                }
+            },
+            "कषाय-मार्गणा": {
+                title: "कषाय मार्गणा",
+                titleEn: "Kashaya Margana", 
+                english: "Passion Classification",
+                description: "जो आत्मा के सम्यक्त्वादि गुणों का घात करें, उसे कषाय कहते हैं। इसके 25 भेद हैं।",
+                definitions: {
+                    "कषाय": {
+                        nameHi: "कषाय",
+                        nameEn: "Kashaya",
+                        english: "Passions",
+                        definition: "जो आत्मा के सम्यक्त्वादि गुणों का घात करें, उसे कषाय कहते हैं।",
+                        subtypes: {
+                            "अनन्तानुबंधी क्रोध": {
+                                nameHi: "अनन्तानुबंधी क्रोध",
+                                nameEn: "Anantanubandhi Krodha",
+                                english: "Infinite-binding Anger",
+                                definition: "जो आत्मा के सम्यक्त्व तथा चारित्र गुण का घात करती है।"
+                            },
+                            "हास्य": {
+                                nameHi: "हास्य", 
+                                nameEn: "Hasya",
+                                english: "Laughter",
+                                definition: "जिसके उदय से हँसी आवे।"
+                            },
+                            "रति": {
+                                nameHi: "रति",
+                                nameEn: "Rati",
+                                english: "Attachment",
+                                definition: "जिसके उदय से क्षेत्र आदि में प्रीति हो।"
+                            },
+                            "अरति": {
+                                nameHi: "अरति",
+                                nameEn: "Arati",
+                                english: "Aversion",
+                                definition: "जिसके उदय से क्षेत्र आदि में अप्रीति हो।"
+                            },
+                            "शोक": {
+                                nameHi: "शोक",
+                                nameEn: "Shoka",
+                                english: "Sorrow",
+                                definition: "जिसके उदय से इष्ट वियोगज क्लेश उत्पन्न हो।"
+                            },
+                            "भय": {
+                                nameHi: "भय",
+                                nameEn: "Bhaya",
+                                english: "Fear",
+                                definition: "जिसके उदय से भय उत्पन्न हो।"
+                            },
+                            "जुगुप्सा": {
+                                nameHi: "जुगुप्सा",
+                                nameEn: "Jugupsaa",
+                                english: "Disgust",
+                                definition: "जिसके उदय से ग्लानि उत्पन्न हो।"
+                            }
+                        },
+                        additionalNotes: "जहाँ अनन्तानुबन्धी कषाय है वहाँ नियम से अप्रत्याख्यानावरण, प्रत्याख्यानावरण एवं संज्वलन कषाय भी रहेगी। जहाँ हास्य कषाय है वहाँ रति कषाय भी रहेगी। जहाँ शोक कषाय है वहाँ अरति कषाय भी रहेगी।"
+                    }
+                }
+            },
+            "ज्ञान-मार्गणा": {
+                title: "ज्ञान मार्गणा",
+                titleEn: "Gyan Margana",
+                english: "Knowledge Classification", 
+                description: "जो जानता है, वह ज्ञान है, ज्ञान की अपेक्षा से जीवों का परिचय करना ज्ञान मार्गणा है। इसके आठ भेद हैं।",
+                definitions: {
+                    "ज्ञान": {
+                        nameHi: "ज्ञान",
+                        nameEn: "Gyan",
+                        english: "Knowledge",
+                        definition: "जो जानता है, वह ज्ञान है।",
+                        subtypes: {
+                            "मतिज्ञान": {
+                                nameHi: "मतिज्ञान",
+                                nameEn: "Matiagyan",
+                                english: "Sensory Knowledge", 
+                                definition: "जो ज्ञान पांच इन्द्रिय और मन के द्वारा होता है, उसे मतिज्ञान कहते हैं।"
+                            },
+                            "श्रुतज्ञान": {
+                                nameHi: "श्रुतज्ञान",
+                                nameEn: "Shrutgyan",
+                                english: "Scriptural Knowledge",
+                                definition: "मतिज्ञान से जाने हुए पदार्थ का जो विशेष ज्ञान होता है, उसे श्रुतज्ञान कहते हैं। यह अक्षरात्मक और अनक्षरात्मक दो प्रकार का होता है।"
+                            },
+                            "अवधिज्ञान": {
+                                nameHi: "अवधिज्ञान",
+                                nameEn: "Avadhigyan", 
+                                english: "Clairvoyant Knowledge",
+                                definition: "द्रव्य, क्षेत्र, काल और भाव की मर्यादा लिए हुए रूपी पदार्थों का इन्द्रियादिक की सहायता के बिना जो प्रत्यक्ष ज्ञान होता है, वह अवधिज्ञान है।"
+                            },
+                            "मनःपर्ययज्ञान": {
+                                nameHi: "मनःपर्ययज्ञान",
+                                nameEn: "Manahparyayagyan",
+                                english: "Telepathic Knowledge",
+                                definition: "इन्द्रिय और मन की सहायता के बिना ही दूसरे के मन में स्थित रूपी पदार्थों का जो प्रत्यक्ष ज्ञान होता है, वह मनःपर्ययज्ञान है।",
+                                additionalNotes: "मनःपर्ययज्ञान का क्षयोपशम 6 से 12 वें गुणस्थान तक रहता है किन्तु इसका प्रयोग छठवें गुणस्थान में होता है।"
+                            },
+                            "केवलज्ञान": {
+                                nameHi: "केवलज्ञान",
+                                nameEn: "Kevalgyan",
+                                english: "Omniscience", 
+                                definition: "जो त्रिकालवर्ती समस्त द्रव्यों की अनन्त पर्यायों को एक साथ स्पष्ट रूप से जानता है, उसे केवलज्ञान कहते हैं।"
+                            },
+                            "कुमतिज्ञान": {
+                                nameHi: "कुमतिज्ञान",
+                                nameEn: "Kumatiagyan",
+                                english: "Wrong Sensory Knowledge",
+                                definition: "सम्यक्त्व के न होने पर होने वाले मतिज्ञान को कुमतिज्ञान कहते हैं।"
+                            },
+                            "कुश्रुतज्ञान": {
+                                nameHi: "कुश्रुतज्ञान",
+                                nameEn: "Kushrutgyan",
+                                english: "Wrong Scriptural Knowledge",
+                                definition: "सम्यक्त्व के न होने पर होने वाले श्रुतज्ञान को कुश्रुतज्ञान कहते हैं।"
+                            },
+                            "कुअवधिज्ञान": {
+                                nameHi: "कुअवधिज्ञान",
+                                nameEn: "Kuavadhigyan",
+                                english: "Wrong Clairvoyant Knowledge",
+                                definition: "सम्यक्त्व के न होने पर होने वाले अवधिज्ञान को कुअवधिज्ञान कहते हैं। इसका दूसरा नाम विभङ्गज्ञान भी है।"
+                            }
+                        }
+                    }
+                }
+            },
+            "संयम-मार्गणा": {
+                title: "संयम मार्गणा",
+                titleEn: "Samyam Margana",
+                english: "Self-restraint Classification",
+                description: "प्राणियों और इन्द्रियों के विषय में अशुभ प्रवृत्ति का त्याग करना संयम है। संयम की अपेक्षा से जीवों का परिचय करना संयम मार्गणा है। इसके सात भेद हैं।",
+                definitions: {
+                    "संयम": {
+                        nameHi: "संयम",
+                        nameEn: "Samyam",
+                        english: "Self-restraint",
+                        definition: "प्राणियों और इन्द्रियों के विषय में अशुभ प्रवृत्ति का त्याग करना संयम है।",
+                        subtypes: {
+                            "असंयम": {
+                                nameHi: "असंयम",
+                                nameEn: "Asamyam",
+                                english: "Non-restraint",
+                                definition: "जहाँ किसी प्रकार के संयम या संयमासंयम का अंश भी न हो, उसे असंयम कहते हैं।"
+                            },
+                            "संयमासंयम": {
+                                nameHi: "संयमासंयम",
+                                nameEn: "Samyamasamyam",
+                                english: "Partial Restraint",
+                                definition: "सम्यग्दर्शन के साथ पांचों पापों का एक देश त्याग करने को संयमासंयम कहते हैं।"
+                            },
+                            "सामायिक चारित्र": {
+                                nameHi: "सामायिक चारित्र",
+                                nameEn: "Samayik Charitra",
+                                english: "Equanimous Conduct",
+                                definition: "सर्वकाल में सम्पूर्ण सावद्य का त्याग करना सामायिक चारित्र है।"
+                            },
+                            "छेदोपस्थापना चारित्र": {
+                                nameHi: "छेदोपस्थापना चारित्र",
+                                nameEn: "Chhedopasthapana Charitra",
+                                english: "Expiation Conduct",
+                                definition: "प्रमाद के निमित्त से व्रतों में दोष होने पर भली प्रकार से उसको दूर कर अपने आप को पुनः उसी में स्थापित करना छेदोपस्थापना चारित्र है।"
+                            },
+                            "परिहार विशुद्धि संयम": {
+                                nameHi: "परिहार विशुद्धि संयम",
+                                nameEn: "Parihara Vishuddhi Samyam",
+                                english: "Pure Avoidance Restraint",
+                                definition: "प्राणी वध से निवृत्ति को परिहार कहते हैं। इस युक्त शुद्धि जिस संयम में होती है, उसे परिहार विशुद्धि संयम कहते हैं।",
+                                additionalNotes: "जो तीस वर्ष तक घर में रहकर इसके पश्चात् मुनि दीक्षा लेते हैं और तीर्थंकर के पादमूल में वर्ष पृथक्त्व तक प्रत्याख्यान पूर्व का अध्ययन करते हैं, ऐसे मुनि के यह परिहार विशुद्धि संयम प्रकट होता है।"
+                            },
+                            "सूक्ष्मसाम्पराय संयम": {
+                                nameHi: "सूक्ष्मसाम्पराय संयम",
+                                nameEn: "Sukshmasamparaya Samyam",
+                                english: "Subtle Passion Restraint",
+                                definition: "जिस संयम में लोभ कषाय अति सूक्ष्म रह गई हो, उसे सूक्ष्म साम्पराय संयम कहते हैं।"
+                            },
+                            "यथाख्यात संयम": {
+                                nameHi: "यथाख्यात संयम",
+                                nameEn: "Yathakhyata Samyam",
+                                english: "Perfect Conduct",
+                                definition: "समस्त मोहनीय कर्म के उपशम या क्षय से जहाँ यथा अवस्थित आत्म-स्वभाव की उपलब्धि हो जाती है। उसे यथाख्यात संयम कहते हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "दर्शन-मार्गणा": {
+                title: "दर्शन मार्गणा",
+                titleEn: "Darshan Margana",
+                english: "Perception Classification",
+                description: "\"विषय विषयि सन्निपात सति दर्शनं भवति\"। विषय और विषयी का सन्निपात होने पर ज्ञान के पूर्व जो सामान्य प्रतिभास होता है, उसे दर्शन कहते हैं।",
+                definitions: {
+                    "दर्शन": {
+                        nameHi: "दर्शन",
+                        nameEn: "Darshan",
+                        english: "Perception",
+                        definition: "विषय और विषयी का सन्निपात होने पर ज्ञान के पूर्व जो सामान्य प्रतिभास होता है, उसे दर्शन कहते हैं।",
+                        subtypes: {
+                            "चक्षुदर्शन": {
+                                nameHi: "चक्षुदर्शन",
+                                nameEn: "Chakshudarshan",
+                                english: "Visual Perception",
+                                definition: "चक्षु इन्द्रिय से होने वाले ज्ञान के पहले पदार्थ का जो सामान्य प्रतिभास होता है, उसे चक्षुदर्शन कहते हैं।"
+                            },
+                            "अचक्षुदर्शन": {
+                                nameHi: "अचक्षुदर्शन",
+                                nameEn: "Achakshudarshan",
+                                english: "Non-visual Perception",
+                                definition: "चक्षु इन्द्रिय के बिना अन्य इन्द्रियों और मन से होने वाले ज्ञान के पूर्व पदार्थ का जो सामान्य प्रतिभास होता है, उसे अचक्षुदर्शन कहते हैं।"
+                            },
+                            "अवधिदर्शन": {
+                                nameHi: "अवधिदर्शन",
+                                nameEn: "Avadhidarshan",
+                                english: "Clairvoyant Perception",
+                                definition: "अवधिज्ञान के पूर्व होने वाला सामान्य प्रतिभास अवधिदर्शन है।"
+                            },
+                            "केवलदर्शन": {
+                                nameHi: "केवलदर्शन",
+                                nameEn: "Kevaldarshan",
+                                english: "Omniscient Perception",
+                                definition: "केवलज्ञान के साथ होने वाले सामान्य प्रतिभास को केवलदर्शन कहते हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "लेश्या-मार्गणा": {
+                title: "लेश्या मार्गणा",
+                titleEn: "Leshya Margana",
+                english: "Psychic Color Classification",
+                description: "\"लिम्पतीति लेश्या\"- जो लिम्पन करती है, उसको लेश्या कहते हैं। अर्थात् जो कर्मों से आत्मा को लिप्त करती है, उसको लेश्या कहते हैं।",
+                definitions: {
+                    "लेश्या": {
+                        nameHi: "लेश्या",
+                        nameEn: "Leshya",
+                        english: "Psychic Color",
+                        definition: "जो कर्मों से आत्मा को लिप्त करती है, उसको लेश्या कहते हैं।",
+                        subtypes: {
+                            "कृष्ण लेश्या": {
+                                nameHi: "कृष्ण लेश्या",
+                                nameEn: "Krishna Leshya",
+                                english: "Black Aura",
+                                definition: "तीव्र क्रोध करने वाला हो, शत्रुता को न छोड़ने वाला हो, लड़ना जिसका स्वभाव हो, धर्म और दया से रहित हो, दुष्ट हो आदि। ये सब लक्षण कृष्ण लेश्या वाले जीव के हैं।"
+                            },
+                            "नील लेश्या": {
+                                nameHi: "नील लेश्या",
+                                nameEn: "Neel Leshya",
+                                english: "Blue Aura",
+                                definition: "आलसी, मंदबुद्धि, स्त्री लुब्धक, प्रवंचक, कातर, सदामानी आदि। ये सब नील लेश्या के लक्षण हैं।"
+                            },
+                            "कापोत लेश्या": {
+                                nameHi: "कापोत लेश्या",
+                                nameEn: "Kapot Leshya",
+                                english: "Grey Aura",
+                                definition: "शोकाकुल, सदारुष्ट, परनिंदक, आत्म-प्रशंसक, संग्राम में माहिर आदि कापोत लेश्या के लक्षण हैं।"
+                            },
+                            "पीत लेश्या": {
+                                nameHi: "पीत लेश्या",
+                                nameEn: "Peet Leshya",
+                                english: "Yellow Aura",
+                                definition: "प्रबुद्ध (जागृत), करुणा युक्त, जो कार्य-अकार्य का विचार करने वाला हो, लाभालाभ में समता रखने वाला हो आदि। पीत लेश्या के लक्षण हैं।"
+                            },
+                            "पद्म लेश्या": {
+                                nameHi: "पद्म लेश्या",
+                                nameEn: "Padma Leshya",
+                                english: "Lotus/Pink Aura",
+                                definition: "दयाशील हो, त्यागी हो, भद्र हो, साधुजनों की पूजा में निरत हो, बहुत अपराध या हानि पहुंचाने वाले को भी क्षमा कर दे, आदि पद्म लेश्या के लक्षण हैं।"
+                            },
+                            "शुक्ल लेश्या": {
+                                nameHi: "शुक्ल लेश्या",
+                                nameEn: "Shukla Leshya",
+                                english: "White Aura",
+                                definition: "जो शत्रु के दोषों पर भी दृष्टि न देने वाला हो, जिस पर से राग द्वेष व स्नेह न हो आदि शुक्ल लेश्या के लक्षण हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "भव्य-मार्गणा": {
+                title: "भव्य मार्गणा",
+                titleEn: "Bhavya Margana",
+                english: "Capability Classification",
+                description: "भव्य और अभव्य के माध्यम से जीवों का परिचय करना भव्य मार्गणा है।",
+                definitions: {
+                    "भव्य": {
+                        nameHi: "भव्य",
+                        nameEn: "Bhavya",
+                        english: "Liberation-capable",
+                        definition: "जिसके सम्यग्दर्शन, सम्यग्ज्ञान एवं सम्यक्चारित्र भाव प्रकट होने की योग्यता है, वह भव्य है।",
+                        subtypes: {
+                            "भव्य": {
+                                nameHi: "भव्य",
+                                nameEn: "Bhavya",
+                                english: "Liberation-capable",
+                                definition: "जिसके सम्यग्दर्शन, सम्यग्ज्ञान एवं सम्यक्चारित्र भाव प्रकट होने की योग्यता है।"
+                            },
+                            "अभव्य": {
+                                nameHi: "अभव्य",
+                                nameEn: "Abhavya",
+                                english: "Liberation-incapable",
+                                definition: "जिसके सम्यग्दर्शन, सम्यग्ज्ञान एवं सम्यक्चारित्र भाव प्रकट होने की योग्यता नहीं है, वह अभव्य है।"
+                            }
+                        }
+                    }
+                }
+            },
+            "सम्यक्त्व-मार्गणा": {
+                title: "सम्यक्त्व मार्गणा",
+                titleEn: "Samyaktva Margana",
+                english: "Right Belief Classification",
+                description: "सात तत्त्वों तथा सच्चे देव, शास्त्र और गुरु का यथार्थ श्रद्धान प्रकट होने पर होने वाली आत्मा की उस शुद्ध परिणति को सम्यक्त्व कहते हैं।",
+                definitions: {
+                    "सम्यक्त्व": {
+                        nameHi: "सम्यक्त्व",
+                        nameEn: "Samyaktva",
+                        english: "Right Belief",
+                        definition: "सात तत्त्वों तथा सच्चे देव, शास्त्र और गुरु का यथार्थ श्रद्धान प्रकट होने पर होने वाली आत्मा की उस शुद्ध परिणति को सम्यक्त्व कहते हैं।",
+                        subtypes: {
+                            "मिथ्यात्व": {
+                                nameHi: "मिथ्यात्व",
+                                nameEn: "Mithyatva",
+                                english: "Wrong Belief",
+                                definition: "मिथ्यात्व प्रकृति के उदय से होने वाले तत्त्वार्थ के अश्रद्धान रूप परिणामों को मिथ्यात्व कहते हैं।"
+                            },
+                            "सासादन": {
+                                nameHi: "सासादन",
+                                nameEn: "Sasadan",
+                                english: "Downfall",
+                                definition: "उपशम सम्यक्त्व के काल में कम से कम एक समय और अधिक से अधिक छह आवली शेष रहने पर अनन्तानुबन्धी कषाय के चार भेदों में से किसी एक कषाय का उदय होने से उपशम सम्यक्त्व से च्युत होने पर और मिथ्यात्व प्रकृति के उदय न होने से मध्य के काल में जो परिणाम होते हैं, उसे सासादन सम्यक्त्व कहते हैं।"
+                            },
+                            "क्षयोपशम": {
+                                nameHi: "क्षयोपशम",
+                                nameEn: "Kshayopashama",
+                                english: "Destructive-cum-Subsidence",
+                                definition: "अनन्तानुबन्धी क्रोध, मान, माया, लोभ मिथ्यात्व व सम्यग्मिथ्यात्व इन 6 प्रकृतियों के उदयाभावी क्षय व उपशम से तथा सम्यक् प्रकृति के उदय से जो सम्यक्त्व होता है, उसे क्षयोपशम सम्यक्त्व कहते हैं।"
+                            },
+                            "उपशम": {
+                                nameHi: "उपशम",
+                                nameEn: "Upashama",
+                                english: "Subsidence",
+                                definition: "दर्शन मोहनीय की मिथ्यात्व, सम्यग्मिथ्यात्व प्रकृति, सम्यक् प्रकृति और अनन्तानुबन्धी क्रोध, मान, माया, लोभ इन सात प्रकृतियों के उपशम से जो सम्यक्त्व होता है, उसे प्रथमोपशम सम्यक्त्व कहते हैं।",
+                                additionalNotes: "प्रथमोपशम सम्यक्त्व के साथ मरण नहीं होता है एवं आयुबन्ध भी नहीं होता है।"
+                            },
+                            "क्षायिक": {
+                                nameHi: "क्षायिक",
+                                nameEn: "Kshayika",
+                                english: "Destructive",
+                                definition: "सात प्रकृतियों के क्षय से जो सम्यग्दर्शन होता है, उसे क्षायिक सम्यग्दर्शन कहते हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "गुणस्थान": {
+                title: "गुणस्थान",
+                titleEn: "Gunasthan",
+                english: "Spiritual Stages",
+                description: "मोह और योग के निमित्त से होने वाले आत्मा के परिणाम को गुणस्थान कहते हैं। गुणस्थान चौदह होते हैं।",
+                definitions: {
+                    "गुणस्थान": {
+                        nameHi: "गुणस्थान",
+                        nameEn: "Gunasthan",
+                        english: "Spiritual Stages",
+                        definition: "मोह और योग के निमित्त से होने वाले आत्मा के परिणाम को गुणस्थान कहते हैं।",
+                        subtypes: {
+                            "मिथ्यात्व गुणस्थान": {
+                                nameHi: "मिथ्यात्व गुणस्थान",
+                                nameEn: "Mithyatva Gunasthan",
+                                english: "False Belief Stage",
+                                definition: "मिथ्यात्व के उदय से जिस जीव के सात तत्त्वों का यथार्थ श्रद्धान नहीं होता उसका यह प्रथम गुणस्थान है।"
+                            },
+                            "सासादन गुणस्थान": {
+                                nameHi: "सासादन गुणस्थान",
+                                nameEn: "Sasadan Gunasthan",
+                                english: "Downfall Stage",
+                                definition: "उपशम सम्यक्त्व से पतित होकर जीव जब तक मिथ्यात्व गुणस्थान में नहीं आता तब तक उसे सासादन सम्यग्दृष्टि कहते हैं।"
+                            },
+                            "सयोगकेवली गुणस्थान": {
+                                nameHi: "सयोगकेवली गुणस्थान",
+                                nameEn: "Sayogakevali Gunasthan",
+                                english: "Omniscient with Activity",
+                                definition: "चार घातिया कर्मों के क्षय हो जाने से जहाँ अनन्तज्ञान, अनन्तदर्शन, अनन्तसुख व अनन्त वीर्य प्रकट हो जाते हैं, उन्हें केवली कहते हैं और उनके जब तक योग रहता है, तब तक उन्हें सयोग केवली कहते हैं।"
+                            },
+                            "अयोगकेवली गुणस्थान": {
+                                nameHi: "अयोगकेवली गुणस्थान",
+                                nameEn: "Ayogakevali Gunasthan",
+                                english: "Omniscient without Activity",
+                                definition: "सयोग केवली के जब योग नष्ट हो जाते हैं एवं जब तक शरीर से मुक्त नहीं होते हैं, तब तक इनको अयोग केवली कहते हैं।",
+                                additionalNotes: "अयोगकेवली का काल 5 ह्रस्व अक्षर (अ,इ,उ,ऋ,लृ) बोलने में जितना समय लगता है, उतना ही है।"
+                            }
+                        }
+                    }
+                }
+            },
+            "ध्यान": {
+                title: "ध्यान",
+                titleEn: "Dhyana",
+                english: "Meditation",
+                description: "एक पदार्थ में मन को केन्द्रित करना ध्यान है। ध्यान के मूल में 4 भेद हैं।",
+                definitions: {
+                    "ध्यान": {
+                        nameHi: "ध्यान",
+                        nameEn: "Dhyana",
+                        english: "Meditation",
+                        definition: "एक पदार्थ में मन को केन्द्रित करना ध्यान है।",
+                        subtypes: {
+                            "आर्तध्यान": {
+                                nameHi: "आर्तध्यान",
+                                nameEn: "Artadhyana",
+                                english: "Sorrowful Meditation",
+                                definition: "आर्तनाम दुःख का है। दुःखानुभव में चित्त का रुकना आर्तध्यान है। इष्ट वियोगज, अनिष्ट संयोगज, वेदनाजन्य एवं निदान इसके चार भेद हैं।"
+                            },
+                            "रौद्रध्यान": {
+                                nameHi: "रौद्रध्यान",
+                                nameEn: "Raudradhyana",
+                                english: "Cruel Meditation",
+                                definition: "क्रूर परिणामों से उत्पन्न हुए ध्यान को रौद्रध्यान कहते हैं। हिंसानंद, मृषानंद, चौर्यानंद और परिग्रहानंद इसके चार भेद हैं।"
+                            },
+                            "धर्म्यध्यान": {
+                                nameHi: "धर्म्यध्यान",
+                                nameEn: "Dharmyadhyana",
+                                english: "Righteous Meditation",
+                                definition: "शुभ विचारों में मन का स्थिर होना धर्म्यध्यान है। आज्ञाविचय, अपायविचय, विपाकविचय एवं संस्थानविचय इसके चार भेद हैं।"
+                            },
+                            "शुक्लध्यान": {
+                                nameHi: "शुक्लध्यान",
+                                nameEn: "Shukladhyana",
+                                english: "Pure Meditation",
+                                definition: "मन की अत्यन्त निर्मलता होने पर जो एकाग्रता होती है, उसे शुक्लध्यान कहते हैं। पृथक्त्ववितर्क वीचार, एकत्ववितर्क अवीचार, सूक्ष्मक्रियाप्रतिपाति एवं व्युपरतक्रियानिवृत्ति इसके चार भेद हैं।"
+                            }
+                        }
+                    }
+                }
+            },
+            "पर्याप्ति": {
+                title: "पर्याप्ति",
+                titleEn: "Paryapti",
+                english: "Bio-potentials",
+                description: "जन्म के प्रथम समय से पुद्गल परमाणुओं को ग्रहण कर जीवन धारण में विशेष प्रकार की पौद्गलिक शक्ति की प्राप्ति को पर्याप्ति कहते हैं।",
+                definitions: {
+                    "पर्याप्ति": {
+                        nameHi: "पर्याप्ति",
+                        nameEn: "Paryapti",
+                        english: "Bio-potential",
+                        definition: "जन्म के प्रथम समय से पुद्गल परमाणुओं को ग्रहण कर जीवन धारण में विशेष प्रकार की पौद्गलिक शक्ति की प्राप्ति को पर्याप्ति कहते हैं।",
+                        subtypes: {
+                            "आहार पर्याप्ति": {
+                                nameHi: "आहार पर्याप्ति",
+                                nameEn: "Ahara Paryapti",
+                                english: "Food Bio-potential",
+                                definition: "एक शरीर को छोड़कर नवीन शरीर के साधनभूत जिन नोकर्म वर्गणाओं को जीव ग्रहण करता है। उन वर्गणाओं के परमाणुओं को ठोस और तरल रूप में परिणमन के कारणभूत जीव की शक्ति की पूर्णता को आहार पर्याप्ति कहते हैं।"
+                            },
+                            "शरीर पर्याप्ति": {
+                                nameHi: "शरीर पर्याप्ति",
+                                nameEn: "Sharira Paryapti",
+                                english: "Body Bio-potential",
+                                definition: "जिन परमाणुओं को ठोस रूप परिवर्तित किया था उसको हड्डी आदि कठिन अवयव रूप और जिनको तरल रूप परिवर्तित किया था, उनको रुधिरादि रूप में परिवर्तित करने के कारणभूत जीव की शक्ति की पूर्णता को शरीर पर्याप्ति कहते हैं।"
+                            },
+                            "इन्द्रिय पर्याप्ति": {
+                                nameHi: "इन्द्रिय पर्याप्ति",
+                                nameEn: "Indriya Paryapti",
+                                english: "Sense Bio-potential",
+                                definition: "आहार वर्गणा के परमाणुओं को इन्द्रिय आकार रूप परिवर्तित करने को तथा इन्द्रिय द्वारा विषय ग्रहण करने के कारणभूत जीव की शक्ति की पूर्णता को इन्द्रिय पर्याप्ति कहते हैं।"
+                            },
+                            "श्वासोच्छ्वास पर्याप्ति": {
+                                nameHi: "श्वासोच्छ्वास पर्याप्ति",
+                                nameEn: "Shvasochvasa Paryapti",
+                                english: "Breathing Bio-potential",
+                                definition: "आहार वर्गणा के परमाणुओं को श्वासोच्छ्वास रूप परिवर्तित करने के कारणभूत जीव की शक्ति की पूर्णता को श्वासोच्छ्वास पर्याप्ति कहते हैं।"
+                            },
+                            "भाषा पर्याप्ति": {
+                                nameHi: "भाषा पर्याप्ति",
+                                nameEn: "Bhasha Paryapti",
+                                english: "Speech Bio-potential",
+                                definition: "भाषा वर्गणा के परमाणुओं को वचन रूप परिवर्तित करने के कारणभूत जीव की शक्ति की पूर्णता को भाषा पर्याप्ति कहते हैं।"
+                            },
+                            "मन पर्याप्ति": {
+                                nameHi: "मन पर्याप्ति",
+                                nameEn: "Mana Paryapti",
+                                english: "Mind Bio-potential",
+                                definition: "मनोवर्गणा के परमाणुओं को हृदयस्थान में अष्ट पाखुड़ी के कमलाकार मन रूप परिवर्तित करने को तथा उसके द्वारा यथावत् विचार करने के कारणभूत जीव की शक्ति की पूर्णता को मनःपर्याप्ति कहते हैं।"
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Complete matrix data simplified
+        const matrixData = {
+            1: [4,5,6,13,3,25,3,1,2,6,2,1,2,2,1,19,6,10,4,5,8,55,84,199.5],
+            2: [4,1,1,13,3,25,3,1,2,6,1,1,1,2,1,1,6,10,4,5,8,50,26,108.5],
+            3: [4,1,1,10,3,21,2,1,2,6,1,1,1,1,1,1,6,10,4,5,9,43,26,108.5],
+            4: [4,1,1,13,3,21,3,1,3,6,1,3,1,2,1,1,6,10,4,6,10,46,26,108.5],
+            5: [2,1,1,9,3,17,3,1,3,3,1,3,1,1,1,1,6,10,4,6,11,37,18,57.5],
+            6: [1,1,1,11,3,13,4,3,3,3,1,3,1,1,1,1,6,10,4,7,7,24,14,14],
+            7: [1,1,1,9,3,13,4,3,3,3,1,3,1,1,1,1,6,10,3,7,4,22,14,14],
+            8: [1,1,1,9,3,13,4,2,3,1,1,2,1,1,1,1,6,10,3,7,1,22,14,14],
+            9: [1,1,1,9,3,7,4,2,3,1,1,2,1,1,1,1,6,10,2,7,1,16,14,14],
+            10: [1,1,1,9,0,1,4,1,3,1,1,2,1,1,1,1,6,10,1,7,1,10,14,14],
+            11: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
+            12: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
+            13: [1,1,1,7,0,0,1,1,1,1,1,1,0,2,1,1,6,4,0,2,1,7,14,14],
+            14: [1,1,1,0,0,0,1,1,1,0,1,1,0,1,1,1,6,1,0,2,1,0,14,14]
+        };
+
+        // Complete matrix data with details
         const completeMatrixData = {
             1: { // Mithyatva
-                0: { present: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"], absent: [], count: 4, total: 4,
-                     notes: "All four states of existence are possible in false belief stage" },
                 1: { present: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय", "पंचेन्द्रिय"], absent: [], count: 5, total: 5,
                      notes: "All five sense categories exist - from one-sensed to five-sensed beings" },
                 2: { present: ["पृथ्वीकायिक", "जलकायिक", "अग्निकायिक", "वायुकायिक", "वनस्पतिकायिक", "त्रसकायिक"], absent: [], count: 6, total: 6,
@@ -1626,26 +2537,6 @@
                       notes: "Human form until liberation" },
                 23: { present: ["मनुष्य (14)"], absent: ["All others"], count: 14, total: 199.5,
                       notes: "Human sub-categories only" }
-            }
-        };
-
-        // Use the simplified matrix data from original
-        const matrixData = {
-            1: [4,5,6,13,3,25,3,1,2,6,2,1,2,2,1,19,6,10,4,5,8,55,84,199.5],
-            2: [4,1,1,13,3,25,3,1,2,6,1,1,1,2,1,1,6,10,4,5,8,50,26,108.5],
-            3: [4,1,1,10,3,21,2,1,2,6,1,1,1,1,1,1,6,10,4,5,9,43,26,108.5],
-            4: [4,1,1,13,3,21,3,1,3,6,1,3,1,2,1,1,6,10,4,6,10,46,26,108.5],
-            5: [2,1,1,9,3,17,3,1,3,3,1,3,1,1,1,1,6,10,4,6,11,37,18,57.5],
-            6: [1,1,1,11,3,13,4,3,3,3,1,3,1,1,1,1,6,10,4,7,7,24,14,14],
-            7: [1,1,1,9,3,13,4,3,3,3,1,3,1,1,1,1,6,10,3,7,4,22,14,14],
-            8: [1,1,1,9,3,13,4,2,3,1,1,2,1,1,1,1,6,10,3,7,1,22,14,14],
-            9: [1,1,1,9,3,7,4,2,3,1,1,2,1,1,1,1,6,10,2,7,1,16,14,14],
-            10: [1,1,1,9,0,1,4,1,3,1,1,2,1,1,1,1,6,10,1,7,1,10,14,14],
-            11: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
-            12: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
-            13: [1,1,1,7,0,0,1,1,1,1,1,1,0,2,1,1,6,4,0,2,1,7,14,14],
-            14: [1,1,1,0,0,0,1,1,1,0,1,1,0,1,1,1,6,1,0,2,1,0,14,14]
-        };
 
         // Transition rules
         const transitionRules = {
@@ -1676,31 +2567,28 @@
 
         // Tab switching
         function showTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.add('hidden');
             });
             
-            // Remove active class from all tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
             document.getElementById(`${tabName}-content`).classList.remove('hidden');
             
-            // Add active class to selected tab
             if (event && event.target) {
                 event.target.classList.add('active');
             }
             
-            // Load content if needed
             if (tabName === 'overview' && !document.getElementById('gunasthan-list').innerHTML) {
                 loadOverview();
             } else if (tabName === 'matrix' && !document.getElementById('matrix-table').innerHTML) {
                 loadMatrix();
             } else if (tabName === 'transitions' && !document.getElementById('transitions-list').innerHTML) {
                 loadTransitions();
+            } else if (tabName === 'definitions' && !document.getElementById('definitions-list').innerHTML) {
+                loadDefinitions();
             }
         }
 
@@ -1728,18 +2616,16 @@
             container.innerHTML = html;
         }
 
-        // Load Matrix with enhanced functionality
+        // Load Matrix
         function loadMatrix() {
             const container = document.getElementById('matrix-table');
             let html = '<table class="matrix-table"><thead><tr><th class="thana-header">Thana</th>';
             
-            // Header
             for (let i = 1; i <= 14; i++) {
                 html += `<th>G${i}</th>`;
             }
             html += '</tr></thead><tbody>';
             
-            // Data rows
             thanasData.forEach((thana, index) => {
                 html += `<tr><td class="thana-header">${thana.icon} ${thana.nameHi}</td>`;
                 
@@ -1806,12 +2692,104 @@
             container.innerHTML = html;
         }
 
-        // Enhanced tooltip with complete data
+        // Load ALL Definitions
+        function loadDefinitions() {
+            const container = document.getElementById('definitions-list');
+            let html = '';
+            
+            Object.keys(definitionsDatabase).forEach(categoryKey => {
+                const category = definitionsDatabase[categoryKey];
+                
+                html += `
+                    <div class="category-section">
+                        <div class="category-header" onclick="toggleCategory('${categoryKey}')">
+                            <div class="category-title">${category.title}</div>
+                            <div class="category-subtitle">${category.titleEn} - ${category.english}</div>
+                        </div>
+                        <div id="category-${categoryKey}" class="collapsible-content">
+                            <div style="margin-bottom: 12px; color: #6b7280; font-size: 14px; line-height: 1.5;">
+                                ${category.description}
+                            </div>
+                `;
+                
+                Object.keys(category.definitions).forEach(defKey => {
+                    const def = category.definitions[defKey];
+                    
+                    html += `
+                        <div class="definition-card" id="def-${defKey}">
+                            <div class="definition-header">
+                                <div>
+                                    <div class="definition-title">${def.nameHi} (${def.nameEn})</div>
+                                    <div class="definition-subtitle">${def.english}</div>
+                                </div>
+                                ${def.additionalNotes || (def.subtypes && Object.keys(def.subtypes).length > 0) ? 
+                                    `<button class="know-more-btn" onclick="toggleAdditionalInfo('${defKey}')">Know More</button>` : ''}
+                            </div>
+                            <div class="definition-content">${def.definition}</div>
+                    `;
+                    
+                    if (def.additionalNotes) {
+                        html += `
+                            <div id="additional-${defKey}" class="additional-notes" style="display: none;">
+                                <strong>विशेष:</strong> ${def.additionalNotes}
+                            </div>
+                        `;
+                    }
+                    
+                    if (def.subtypes && Object.keys(def.subtypes).length > 0) {
+                        html += `
+                            <div id="subtypes-${defKey}" class="sub-definitions" style="display: none;">
+                                <h4 style="margin-bottom: 12px; color: #374151;">Sub-types:</h4>
+                        `;
+                        
+                        Object.keys(def.subtypes).forEach(subKey => {
+                            const subDef = def.subtypes[subKey];
+                            html += `
+                                <div class="sub-definition" onclick="showDefinitionDetail('${subKey}', '${subDef.nameHi}', '${subDef.nameEn}', '${subDef.english}', \`${subDef.definition}\`)">
+                                    <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})</div>
+                                    <div class="sub-definition-content">${subDef.definition}</div>
+                                    ${subDef.additionalNotes ? `<div style="margin-top: 8px; font-style: italic; color: #78350f;"><strong>विशेष:</strong> ${subDef.additionalNotes}</div>` : ''}
+                                </div>
+                            `;
+                        });
+                        
+                        html += '</div>';
+                    }
+                    
+                    html += '</div>';
+                });
+                
+                html += '</div></div>';
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // Enhanced tooltip with complete data and navigation to definitions
         function showDetailedTooltip(gunasthanId, thanaIndex) {
             const modal = document.getElementById('tooltip-modal');
             const g = gunasthansData[gunasthanId];
             const t = thanasData[thanaIndex];
-            const data = completeMatrixData[gunasthanId][thanaIndex];
+            
+            // Get count from matrix data
+            const count = matrixData[gunasthanId][thanaIndex];
+            const total = t.total;
+            
+            // Create simplified present/absent arrays based on count
+            let present = [];
+            let absent = [];
+            
+            if (count === total) {
+                present = t.subtypes;
+                absent = [];
+            } else if (count === 0) {
+                present = [];
+                absent = t.subtypes;
+            } else {
+                // For partial counts, show some present and some absent
+                present = t.subtypes.slice(0, count);
+                absent = t.subtypes.slice(count);
+            }
             
             // Update header
             document.getElementById('tooltip-title').textContent = t.nameHi;
@@ -1819,55 +2797,50 @@
             document.getElementById('tooltip-gunasthan').textContent = `In ${g.nameHi} (G${gunasthanId})`;
             
             // Update stats
-            document.getElementById('stat-present').textContent = data.count;
-            document.getElementById('stat-absent').textContent = data.total - data.count;
-            document.getElementById('stat-total').textContent = data.total;
+            document.getElementById('stat-present').textContent = count;
+            document.getElementById('stat-absent').textContent = total - count;
+            document.getElementById('stat-total').textContent = total;
             
             // Build detailed body
             let bodyHtml = '';
             
             // Present section
-            if (data.present && data.present.length > 0) {
+            if (present.length > 0) {
                 bodyHtml += `
                     <div class="tooltip-section present">
                         <div class="section-title present">
                             <span class="section-icon present">✓</span>
-                            Present (${data.present.length})
+                            Present (${present.length})
                         </div>
                         <div class="section-items">
-                            ${data.present.map(item => `<span class="item-tag">${item}</span>`).join('')}
+                            ${present.map(item => `<span class="item-tag" onclick="findAndShowDefinition('${item}')">${item}</span>`).join('')}
                         </div>
                     </div>
                 `;
             }
             
             // Absent section
-            if (data.absent && data.absent.length > 0) {
+            if (absent.length > 0) {
                 bodyHtml += `
                     <div class="tooltip-section absent">
                         <div class="section-title absent">
                             <span class="section-icon absent">✗</span>
-                            Absent (${data.absent.length})
+                            Absent (${absent.length})
                         </div>
                         <div class="section-items">
-                            ${data.absent.map(item => `<span class="item-tag">${item}</span>`).join('')}
+                            ${absent.map(item => `<span class="item-tag" onclick="findAndShowDefinition('${item}')">${item}</span>`).join('')}
                         </div>
                     </div>
                 `;
             }
             
-            // Notes section
-            if (data.notes) {
-                bodyHtml += `<div class="tooltip-notes">${data.notes}</div>`;
-            }
-            
             // Progress visualization
-            const percentage = (data.count / data.total * 100).toFixed(1);
+            const percentage = (count / total * 100).toFixed(1);
             bodyHtml += `
                 <div class="progress-info">
                     <div class="progress-percentage">${percentage}%</div>
                     <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">
-                        ${data.count} out of ${data.total} characteristics present
+                        ${count} out of ${total} characteristics present
                     </div>
                     <div class="progress-bar-large">
                         <div class="progress-fill-large" style="width: ${percentage}%; background: ${getProgressColor(parseFloat(percentage))}"></div>
@@ -1879,6 +2852,149 @@
             
             // Show modal
             modal.classList.remove('hidden');
+        }
+
+        // Find and show definition from clicked term
+        function findAndShowDefinition(term) {
+            // Close current modal
+            closeTooltip();
+            
+            // Switch to definitions tab
+            showTab('definitions');
+            
+            // Search for the term in definitions
+            searchDefinitions(term);
+            
+            // Try to scroll to definition if found
+            setTimeout(() => {
+                const defElement = document.querySelector(`[id*="def-${term}"]`);
+                if (defElement) {
+                    defElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    defElement.style.animation = 'pulse 1s ease-in-out';
+                    setTimeout(() => {
+                        defElement.style.animation = '';
+                    }, 1000);
+                }
+            }, 300);
+        }
+
+        // Search definitions
+        function searchDefinitions(searchTerm) {
+            if (!searchTerm) {
+                loadDefinitions();
+                return;
+            }
+            
+            const term = searchTerm.toLowerCase();
+            const container = document.getElementById('definitions-list');
+            let html = '';
+            let found = false;
+            
+            Object.keys(definitionsDatabase).forEach(categoryKey => {
+                const category = definitionsDatabase[categoryKey];
+                let categoryHtml = '';
+                let categoryFound = false;
+                
+                Object.keys(category.definitions).forEach(defKey => {
+                    const def = category.definitions[defKey];
+                    
+                    if (def.nameHi.includes(searchTerm) || 
+                        def.nameEn.toLowerCase().includes(term) ||
+                        def.english.toLowerCase().includes(term) ||
+                        def.definition.includes(searchTerm)) {
+                        
+                        found = true;
+                        categoryFound = true;
+                        
+                        categoryHtml += `
+                            <div class="definition-card" id="def-${defKey}">
+                                <div class="definition-header">
+                                    <div>
+                                        <div class="definition-title">${def.nameHi} (${def.nameEn})</div>
+                                        <div class="definition-subtitle">${def.english}</div>
+                                    </div>
+                                    ${def.additionalNotes || (def.subtypes && Object.keys(def.subtypes).length > 0) ? 
+                                        `<button class="know-more-btn" onclick="toggleAdditionalInfo('${defKey}')">Know More</button>` : ''}
+                                </div>
+                                <div class="definition-content">${def.definition}</div>
+                        `;
+                        
+                        if (def.additionalNotes) {
+                            categoryHtml += `
+                                <div id="additional-${defKey}" class="additional-notes" style="display: none;">
+                                    <strong>विशेष:</strong> ${def.additionalNotes}
+                                </div>
+                            `;
+                        }
+                        
+                        if (def.subtypes && Object.keys(def.subtypes).length > 0) {
+                            categoryHtml += `
+                                <div id="subtypes-${defKey}" class="sub-definitions" style="display: none;">
+                                    <h4 style="margin-bottom: 12px; color: #374151;">Sub-types:</h4>
+                            `;
+                            
+                            Object.keys(def.subtypes).forEach(subKey => {
+                                const subDef = def.subtypes[subKey];
+                                categoryHtml += `
+                                    <div class="sub-definition">
+                                        <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})</div>
+                                        <div class="sub-definition-content">${subDef.definition}</div>
+                                        ${subDef.additionalNotes ? `<div style="margin-top: 8px; font-style: italic; color: #78350f;"><strong>विशेष:</strong> ${subDef.additionalNotes}</div>` : ''}
+                                    </div>
+                                `;
+                            });
+                            
+                            categoryHtml += '</div>';
+                        }
+                        
+                        categoryHtml += '</div>';
+                    }
+                });
+                
+                if (categoryFound) {
+                    html += `
+                        <div class="category-section">
+                            <div class="category-header">
+                                <div class="category-title">${category.title}</div>
+                                <div class="category-subtitle">${category.titleEn} - ${category.english}</div>
+                            </div>
+                            <div class="collapsible-content expanded">
+                                ${categoryHtml}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (!found) {
+                html = '<div class="loading">No definitions found for your search term...</div>';
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Toggle category expansion
+        function toggleCategory(categoryKey) {
+            const element = document.getElementById(`category-${categoryKey}`);
+            element.classList.toggle('expanded');
+        }
+
+        // Toggle additional information
+        function toggleAdditionalInfo(defKey) {
+            const additionalElement = document.getElementById(`additional-${defKey}`);
+            const subtypesElement = document.getElementById(`subtypes-${defKey}`);
+            
+            if (additionalElement) {
+                additionalElement.style.display = additionalElement.style.display === 'none' ? 'block' : 'none';
+            }
+            if (subtypesElement) {
+                subtypesElement.style.display = subtypesElement.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        // Show definition detail modal
+        function showDefinitionDetail(key, nameHi, nameEn, english, definition) {
+            alert(`${nameHi} (${nameEn})\n${english}\n\n${definition}`);
         }
 
         // Simple gunasthan detail (for overview)
@@ -1957,7 +3073,7 @@
                             <div style="margin-top: 12px;">
                                 <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">Subtypes (${thana.subtypes.length}):</div>
                                 <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-                                    ${thana.subtypes.slice(0, 5).map(s => `<span class="item-tag">${s}</span>`).join('')}
+                                    ${thana.subtypes.slice(0, 5).map(s => `<span class="item-tag" onclick="findAndShowDefinition('${s}')">${s}</span>`).join('')}
                                     ${thana.subtypes.length > 5 ? `<span class="item-tag">+${thana.subtypes.length - 5} more</span>` : ''}
                                 </div>
                             </div>
@@ -2003,21 +3119,15 @@
         // Make functions global
         window.showTab = showTab;
         window.searchThanas = searchThanas;
+        window.searchDefinitions = searchDefinitions;
         window.showGunasthanDetail = showGunasthanDetail;
         window.showDetailedTooltip = showDetailedTooltip;
         window.closeTooltip = closeTooltip;
         window.scrollToGunasthan = scrollToGunasthan;
-
-        // Add pulse animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-                100% { transform: scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
+        window.findAndShowDefinition = findAndShowDefinition;
+        window.toggleCategory = toggleCategory;
+        window.toggleAdditionalInfo = toggleAdditionalInfo;
+        window.showDefinitionDetail = showDefinitionDetail;
     </script>
 </body>
 </html>
