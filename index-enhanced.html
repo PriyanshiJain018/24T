@@ -2855,8 +2855,7 @@
             // Show modal
             modal.classList.remove('hidden');
         }
-
-        // Find and show definition from clicked term
+        // Enhanced find and show definition function
         function findAndShowDefinition(term) {
             // Close current modal
             closeTooltip();
@@ -2864,23 +2863,15 @@
             // Switch to definitions tab
             showTab('definitions');
             
-            // Search for the term in definitions
+            // Search for the term in definitions (this will auto-expand and highlight)
             searchDefinitions(term);
             
-            // Try to scroll to definition if found
-            setTimeout(() => {
-                const defElement = document.querySelector(`[id*="def-${term}"]`);
-                if (defElement) {
-                    defElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    defElement.style.animation = 'pulse 1s ease-in-out';
-                    setTimeout(() => {
-                        defElement.style.animation = '';
-                    }, 1000);
-                }
-            }, 300);
+            // The enhanced searchDefinitions function now handles scrolling and highlighting automatically
+            // No need for additional setTimeout logic here as it's built into the search function
         }
 
         // Search definitions
+        // Enhanced search definitions function that searches in subtypes too
         function searchDefinitions(searchTerm) {
             if (!searchTerm) {
                 loadDefinitions();
@@ -2891,6 +2882,7 @@
             const container = document.getElementById('definitions-list');
             let html = '';
             let found = false;
+            let matchedSubtypes = []; // Track which subtypes matched for auto-expansion
             
             Object.keys(definitionsDatabase).forEach(categoryKey => {
                 const category = definitionsDatabase[categoryKey];
@@ -2899,14 +2891,45 @@
                 
                 Object.keys(category.definitions).forEach(defKey => {
                     const def = category.definitions[defKey];
+                    let defFound = false;
+                    let hasSubtypeMatch = false;
+                    let matchedSubtypeKeys = [];
                     
+                    // Check main definition
                     if (def.nameHi.includes(searchTerm) || 
                         def.nameEn.toLowerCase().includes(term) ||
                         def.english.toLowerCase().includes(term) ||
                         def.definition.includes(searchTerm)) {
-                        
+                        defFound = true;
+                    }
+                    
+                    // Check subtypes
+                    if (def.subtypes && Object.keys(def.subtypes).length > 0) {
+                        Object.keys(def.subtypes).forEach(subKey => {
+                            const subDef = def.subtypes[subKey];
+                            if (subDef.nameHi.includes(searchTerm) || 
+                                subDef.nameEn.toLowerCase().includes(term) ||
+                                subDef.english.toLowerCase().includes(term) ||
+                                subDef.definition.includes(searchTerm) ||
+                                (subDef.additionalNotes && subDef.additionalNotes.includes(searchTerm))) {
+                                defFound = true;
+                                hasSubtypeMatch = true;
+                                matchedSubtypeKeys.push(subKey);
+                            }
+                        });
+                    }
+                    
+                    if (defFound) {
                         found = true;
                         categoryFound = true;
+                        
+                        // Store info for auto-expansion
+                        if (hasSubtypeMatch) {
+                            matchedSubtypes.push({
+                                defKey: defKey,
+                                subtypeKeys: matchedSubtypeKeys
+                            });
+                        }
                         
                         categoryHtml += `
                             <div class="definition-card" id="def-${defKey}">
@@ -2923,7 +2946,7 @@
                         
                         if (def.additionalNotes) {
                             categoryHtml += `
-                                <div id="additional-${defKey}" class="additional-notes" style="display: none;">
+                                <div id="additional-${defKey}" class="additional-notes" style="${hasSubtypeMatch ? 'display: block;' : 'display: none;'}">
                                     <strong>विशेष:</strong> ${def.additionalNotes}
                                 </div>
                             `;
@@ -2931,14 +2954,15 @@
                         
                         if (def.subtypes && Object.keys(def.subtypes).length > 0) {
                             categoryHtml += `
-                                <div id="subtypes-${defKey}" class="sub-definitions" style="display: none;">
+                                <div id="subtypes-${defKey}" class="sub-definitions" style="${hasSubtypeMatch ? 'display: block;' : 'display: none;'}">
                                     <h4 style="margin-bottom: 12px; color: #374151;">Sub-types:</h4>
                             `;
                             
                             Object.keys(def.subtypes).forEach(subKey => {
                                 const subDef = def.subtypes[subKey];
+                                const isMatched = matchedSubtypeKeys.includes(subKey);
                                 categoryHtml += `
-                                    <div class="sub-definition">
+                                    <div class="sub-definition" id="subdef-${subKey}" style="${isMatched ? 'background: #fef3c7; border: 2px solid #f59e0b;' : ''}">
                                         <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})</div>
                                         <div class="sub-definition-content">${subDef.definition}</div>
                                         ${subDef.additionalNotes ? `<div style="margin-top: 8px; font-style: italic; color: #78350f;"><strong>विशेष:</strong> ${subDef.additionalNotes}</div>` : ''}
@@ -2973,6 +2997,29 @@
             }
             
             container.innerHTML = html;
+            
+            // Auto-scroll to first matched subtype if any
+            if (matchedSubtypes.length > 0) {
+                setTimeout(() => {
+                    const firstMatch = matchedSubtypes[0];
+                    const firstSubtype = firstMatch.subtypeKeys[0];
+                    const element = document.getElementById(`subdef-${firstSubtype}`);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // Add pulse animation
+                        element.style.animation = 'pulse 2s ease-in-out';
+                        setTimeout(() => {
+                            element.style.animation = '';
+                        }, 2000);
+                    } else {
+                        // Fallback to main definition
+                        const defElement = document.getElementById(`def-${firstMatch.defKey}`);
+                        if (defElement) {
+                            defElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }
+                }, 300);
+            }
         }
 
         // Toggle category expansion
