@@ -2653,11 +2653,21 @@
             html += '</tbody></table>';
             container.innerHTML = html;
         }
-
         // Load Transitions
         function loadTransitions() {
             const container = document.getElementById('transitions-list');
-            let html = '';
+            
+            // Add Game Mode Button at the top
+            let html = `
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 20px; margin-bottom: 20px; text-align: center; cursor: pointer; transition: transform 0.3s ease;" onclick="launchGameMode()" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div style="color: white; font-size: 24px; font-weight: bold; margin-bottom: 8px;">🎮 गुणस्थान यात्रा गेम</div>
+                    <div style="color: rgba(255,255,255,0.9); font-size: 16px; margin-bottom: 12px;">Interactive Spiritual Journey Game</div>
+                    <div style="color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 15px;">Experience the 14 Gunasthanas through an engaging interactive game with choices, consequences, and spiritual progression!</div>
+                    <div style="background: rgba(255,255,255,0.2); display: inline-block; padding: 10px 20px; border-radius: 25px; font-weight: 600; color: white; border: 2px solid rgba(255,255,255,0.3);">
+                        🚀 Start Your Spiritual Journey
+                    </div>
+                </div>
+            `;
             
             for (let i = 1; i <= 14; i++) {
                 const g = gunasthansData[i];
@@ -2692,6 +2702,84 @@
             }
             
             container.innerHTML = html;
+        }
+        
+        // Launch Game Mode - External File Version
+        function launchGameMode() {
+            // ⭐ THIS IS WHERE YOU CHANGE THE FILE NAME ⭐
+            const gameFileName = 'complete_gunasthan_game.html'; // Change this to your file name
+            
+            // Try to open the game file
+            const gameWindow = window.open(gameFileName, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+            
+            if (gameWindow) {
+                // Show success message
+                showMessage('success', '🎮 गेम मोड नई विंडो में खुल रहा है! Game Mode opening in new window!');
+                
+                // Check if the file loaded successfully after a delay
+                setTimeout(() => {
+                    try {
+                        if (gameWindow.closed) {
+                            showMessage('info', 'ℹ️ गेम विंडो बंद हो गई। Game window was closed.');
+                        }
+                    } catch (e) {
+                        // Cross-origin error means file loaded from different domain - that's okay
+                    }
+                }, 1000);
+                
+            } else {
+                // Fallback if popup blocked
+                showMessage('warning', '⚠️ पॉप-अप ब्लॉकर के कारण गेम नहीं खुल सका। कृपया पॉप-अप की अनुमति दें।');
+                
+                // Show alternative options
+                showGameAlternatives(gameFileName);
+            }
+        }
+
+        // Alternative options if popup fails
+        function showGameAlternatives(gameFileName) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.8); z-index: 10000;
+                display: flex; align-items: center; justify-content: center;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 20px; padding: 30px; max-width: 500px; text-align: center; position: relative;">
+                    <button onclick="this.closest('div').parentElement.remove()" 
+                            style="position: absolute; top: 15px; right: 15px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold;">×</button>
+                    
+                    <div style="font-size: 48px; margin-bottom: 20px;">🎮</div>
+                    <h2 style="margin-bottom: 15px; color: #1f2937;">गुणस्थान यात्रा गेम</h2>
+                    <p style="color: #6b7280; margin-bottom: 20px;">Choose how to access the game:</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin: 20px 0;">
+                        <button onclick="window.open('${gameFileName}', '_self')" 
+                                style="background: #10b981; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            🔄 Open in Same Tab
+                        </button>
+                        
+                        <a href="${gameFileName}" target="_blank" 
+                        style="background: #3b82f6; color: white; text-decoration: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; display: block;">
+                            🔗 Direct Link to Game
+                        </a>
+                        
+                        <button onclick="navigator.clipboard.writeText(window.location.origin + '/' + '${gameFileName}').then(() => alert('Game URL copied!'))" 
+                                style="background: #6b7280; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                            📋 Copy Game URL
+                        </button>
+                    </div>
+                    
+                    <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 15px 0; border: 1px solid #f59e0b; font-size: 13px;">
+                        <strong>File:</strong> ${gameFileName}<br>
+                        Make sure this file is in the same folder as your main app.
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
         }
 
         // Load ALL Definitions
@@ -3169,6 +3257,7 @@
         window.toggleCategory = toggleCategory;
         window.toggleAdditionalInfo = toggleAdditionalInfo;
         window.showDefinitionDetail = showDefinitionDetail;
+        window.launchGameMode = launchGameMode; // Add this line
     </script>
 </body>
 </html>
