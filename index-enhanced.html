@@ -839,24 +839,6 @@
         <button class="tab" onclick="showTab('transitions')">Transitions</button>
         <button class="tab" onclick="showTab('definitions')">Definitions</button>
     </div>
-    <!-- Universal Search Bar -->
-    <div style="background: white; border-bottom: 1px solid #e5e7eb; padding: 12px 16px; position: sticky; top: 108px; z-index: 85; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <div style="display: flex; align-items: center; gap: 12px; max-width: 600px; margin: 0 auto;">
-            <div style="flex: 1; position: relative;">
-                <input type="text" 
-                    id="universal-search" 
-                    placeholder="🔍 Search across all content..." 
-                    style="width: 100%; padding: 12px 16px 12px 40px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; transition: all 0.2s ease; background: #f9fafb;"
-                    oninput="handleUniversalSearch(this.value)"
-                    onfocus="this.style.borderColor='#3b82f6'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
-                    onblur="this.style.borderColor='#e5e7eb'; this.style.background='#f9fafb'; this.style.boxShadow='none'">
-                <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 16px;">🔍</span>
-            </div>
-            <div id="search-context" style="background: #eff6ff; color: #1e40af; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap;">
-                Overview Mode
-            </div>
-        </div>
-    </div>
     
     <div class="content">
         <div id="overview-content" class="tab-content">
@@ -3951,14 +3933,6 @@
                             <div style="font-size: 32px; margin-bottom: 8px;">📖</div>
                             <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">Definitions</div>
                             <div style="font-size: 12px; color: #64748b;">Complete glossary</div>
-                        </div>
-                        
-                        <div onclick="showTab('search')" style="background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center;"
-                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'; this.style.borderColor='#ef4444'"
-                            onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0'">
-                            <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
-                            <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">Search</div>
-                            <div style="font-size: 12px; color: #64748b;">Find specific Thanas</div>
                         </div>
                     </div>
                 </div>
