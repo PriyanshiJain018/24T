@@ -812,6 +812,19 @@
             50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
             100% { transform: scale(1); }
         }
+        .search-highlight {
+            animation: searchPulse 2s ease-in-out;
+        }
+
+        @keyframes searchPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+            100% { transform: scale(1); }
+        }
+
+        #universal-search:focus {
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -825,7 +838,24 @@
         <button class="tab" onclick="showTab('matrix')">Matrix</button>
         <button class="tab" onclick="showTab('transitions')">Transitions</button>
         <button class="tab" onclick="showTab('definitions')">Definitions</button>
-        <button class="tab" onclick="showTab('search')">Search</button>
+    </div>
+    <!-- Universal Search Bar -->
+    <div style="background: white; border-bottom: 1px solid #e5e7eb; padding: 12px 16px; position: sticky; top: 108px; z-index: 85; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <div style="display: flex; align-items: center; gap: 12px; max-width: 600px; margin: 0 auto;">
+            <div style="flex: 1; position: relative;">
+                <input type="text" 
+                    id="universal-search" 
+                    placeholder="🔍 Search across all content..." 
+                    style="width: 100%; padding: 12px 16px 12px 40px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; transition: all 0.2s ease; background: #f9fafb;"
+                    oninput="handleUniversalSearch(this.value)"
+                    onfocus="this.style.borderColor='#3b82f6'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(59, 130, 246, 0.1)'"
+                    onblur="this.style.borderColor='#e5e7eb'; this.style.background='#f9fafb'; this.style.boxShadow='none'">
+                <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 16px;">🔍</span>
+            </div>
+            <div id="search-context" style="background: #eff6ff; color: #1e40af; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap;">
+                Overview Mode
+            </div>
+        </div>
     </div>
     
     <div class="content">
@@ -883,13 +913,6 @@
             </div>
             <input type="text" class="search-box" placeholder="Search definitions (Hindi/English/Sanskrit)..." oninput="searchDefinitions(this.value)">
             <div id="definitions-list"></div>
-        </div>
-        
-        <div id="search-content" class="tab-content hidden">
-            <input type="text" class="search-box" placeholder="Search Thanas (Hindi/English)..." oninput="searchThanas(this.value)">
-            <div id="search-results">
-                <div class="loading">Enter a search term to find Thanas...</div>
-            </div>
         </div>
     </div>
     
@@ -3812,6 +3835,7 @@
             if (event && event.target) {
                 event.target.classList.add('active');
             }
+            updateSearchContext(tabName);
             
             if (tabName === 'overview' && !document.getElementById('gunasthan-list').innerHTML) {
                 loadOverview();
@@ -3855,7 +3879,7 @@
                         
                         <div style="background: rgba(255, 255, 255, 0.9); border-radius: 12px; padding: 16px; border: 1px solid rgba(14, 165, 233, 0.2); margin-bottom: 16px;">
                             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                                <span style="font-size: 18px;">🕉️</span>
+                                <span style="font-size: 18px;"></span>
                                 <strong style="color: #0f172a; font-size: 16px;">Original Text:</strong>
                                 <span style="color: #7c3aed; font-weight: 600; font-size: 16px;">श्री चौबीस ठाणा चर्चा</span>
                             </div>
@@ -5098,6 +5122,154 @@
             document.getElementById('tooltip-body').innerHTML = bodyHtml;
             modal.classList.remove('hidden');
         }
+
+        // Universal Search Functionality
+        function handleUniversalSearch(searchTerm) {
+            const activeTab = document.querySelector('.tab.active').textContent.toLowerCase();
+            updateSearchContext(activeTab);
+            
+            if (!searchTerm.trim()) {
+                clearSearch();
+                return;
+            }
+            
+            switch(activeTab) {
+                case 'overview':
+                    searchInOverview(searchTerm);
+                    break;
+                case 'matrix':
+                    searchInMatrix(searchTerm);
+                    break;
+                case 'transitions':
+                    searchInTransitions(searchTerm);
+                    break;
+                case 'definitions':
+                    searchDefinitions(searchTerm);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function updateSearchContext(activeTab) {
+            const contextElement = document.getElementById('search-context');
+            const contexts = {
+                'overview': 'Overview Mode',
+                'matrix': 'Matrix Mode', 
+                'transitions': 'Transitions Mode',
+                'definitions': 'Definitions Mode'
+            };
+            
+            if (contextElement) {
+                contextElement.textContent = contexts[activeTab] || 'Search Mode';
+            }
+        }
+
+        function clearSearch() {
+            // Clear any search highlights or filters
+            document.querySelectorAll('.search-highlight').forEach(el => {
+                el.classList.remove('search-highlight');
+            });
+            
+            // Reset any filtered content
+            const activeTab = document.querySelector('.tab.active').textContent.toLowerCase();
+            if (activeTab === 'overview' && !document.getElementById('gunasthan-list').innerHTML.includes('Enter a search term')) {
+                loadOverview();
+            }
+        }
+
+        function searchInOverview(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            let found = false;
+            let resultsHtml = '<div style="margin-bottom: 20px; padding: 16px; background: #f0f9ff; border-radius: 12px; border: 1px solid #3b82f6;"><h3 style="color: #1e40af; margin-bottom: 8px;">🔍 Search Results in Overview</h3><p style="color: #1e40af; margin: 0;">Found Gunasthanas matching: <strong>' + searchTerm + '</strong></p></div>';
+            
+            Object.keys(gunasthansData).forEach(id => {
+                const g = gunasthansData[id];
+                if (g.nameHi.includes(searchTerm) || 
+                    g.nameEn.toLowerCase().includes(term) ||
+                    g.english.toLowerCase().includes(term) ||
+                    g.description.toLowerCase().includes(term)) {
+                    found = true;
+                    
+                    resultsHtml += `
+                        <div class="gunasthan-card search-highlight" style="border: 2px solid #3b82f6; background: #f0f9ff;">
+                            <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                                <span class="gunasthan-number" style="background: ${g.color}">${id}</span>
+                                <div style="flex: 1;">
+                                    <div class="gunasthan-name">${g.nameHi}</div>
+                                    <div class="gunasthan-sanskrit">${g.nameEn} - ${g.english}</div>
+                                </div>
+                            </div>
+                            <div class="gunasthan-description">${g.description}</div>
+                            <div style="margin-top: 12px; text-align: center;">
+                                <button onclick="showGunasthanDetail(${id})" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">View Details</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (!found) {
+                resultsHtml += '<div style="text-align: center; padding: 40px; color: #6b7280;">No Gunasthanas found matching your search.</div>';
+            }
+            
+            document.getElementById('gunasthan-list').innerHTML = resultsHtml;
+        }
+
+        function searchInMatrix(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            
+            // Highlight relevant Thana rows
+            document.querySelectorAll('.matrix-table tbody tr').forEach((row, index) => {
+                const thana = thanasData[index];
+                if (thana && (thana.nameHi.includes(searchTerm) || 
+                            thana.nameEn.toLowerCase().includes(term) ||
+                            thana.english.toLowerCase().includes(term))) {
+                    row.style.background = '#f0f9ff';
+                    row.style.border = '2px solid #3b82f6';
+                    row.classList.add('search-highlight');
+                    
+                    // Scroll to first match
+                    if (!document.querySelector('.search-highlight')) {
+                        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    row.style.background = '';
+                    row.style.border = '';
+                    row.classList.remove('search-highlight');
+                }
+            });
+            
+            // Show search info
+            showMessage('info', `🔍 Highlighted Thanas matching: ${searchTerm}`);
+        }
+
+        function searchInTransitions(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            
+            document.querySelectorAll('.transition-card').forEach(card => {
+                const gunasthanName = card.querySelector('.gunasthan-name');
+                if (gunasthanName) {
+                    const text = gunasthanName.textContent;
+                    if (text.includes(searchTerm) || text.toLowerCase().includes(term)) {
+                        card.style.background = '#f0f9ff';
+                        card.style.border = '2px solid #3b82f6';
+                        card.classList.add('search-highlight');
+                        
+                        // Scroll to first match
+                        if (document.querySelectorAll('.search-highlight').length === 1) {
+                            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    } else {
+                        card.style.background = '';
+                        card.style.border = '';
+                        card.classList.remove('search-highlight');
+                    }
+                }
+            });
+            
+            showMessage('info', `🔍 Highlighted transitions matching: ${searchTerm}`);
+        }
         // Make functions global
         window.showTab = showTab;
         window.searchThanas = searchThanas;
@@ -5120,6 +5292,14 @@
         window.changeMatrix = changeMatrix;
         window.changeMatrix = changeMatrix;
         window.showNewDetailedTooltip = showNewDetailedTooltip;
+        window.searchThanas = searchThanas;
+        window.searchDefinitions = searchDefinitions;
+        window.handleUniversalSearch = handleUniversalSearch;
+        window.updateSearchContext = updateSearchContext;
+        window.clearSearch = clearSearch;
+        window.searchInOverview = searchInOverview;
+        window.searchInMatrix = searchInMatrix;
+        window.searchInTransitions = searchInTransitions;
     </script>
 </body>
 </html>
