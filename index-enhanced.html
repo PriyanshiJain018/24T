@@ -2625,7 +2625,7 @@
                 }
             }
         }
-    },
+    }
 
         // Complete matrix data simplified
         const matrixData = {
@@ -3776,6 +3776,163 @@
             modal.classList.remove('hidden');
         }
 
+        // Enhanced function to find and show definition with deep search
+        function findAndShowDefinition(searchTerm) {
+            // Switch to definitions tab first
+            showTab('definitions');
+            
+            // Ensure definitions are loaded
+            if (!document.getElementById('definitions-list').innerHTML) {
+                loadDefinitions();
+            }
+            
+            // Wait for tab switch and load, then search
+            setTimeout(() => {
+                let found = false;
+                let categoryKey = null;
+                let defKey = null;
+                let subKey = null;
+                let isSubtype = false;
+                
+                // Search through all definitions
+                Object.keys(definitionsDatabase).forEach(catKey => {
+                    const category = definitionsDatabase[catKey];
+                    
+                    Object.keys(category.definitions).forEach(dKey => {
+                        const def = category.definitions[dKey];
+                        
+                        // Check if it's a main definition
+                        if (def.nameHi === searchTerm || def.nameEn === searchTerm) {
+                            found = true;
+                            categoryKey = catKey;
+                            defKey = dKey;
+                            return;
+                        }
+                        
+                        // Check subtypes
+                        if (def.subtypes) {
+                            Object.keys(def.subtypes).forEach(sKey => {
+                                const subDef = def.subtypes[sKey];
+                                if (subDef.nameHi === searchTerm || subDef.nameEn === searchTerm) {
+                                    found = true;
+                                    categoryKey = catKey;
+                                    defKey = dKey;
+                                    subKey = sKey;
+                                    isSubtype = true;
+                                    return;
+                                }
+                            });
+                        }
+                    });
+                });
+                
+                if (found) {
+                    // Expand the category
+                    const categoryElement = document.getElementById(`category-${categoryKey}`);
+                    if (categoryElement) {
+                        categoryElement.classList.add('expanded');
+                    }
+                    
+                    // If it's a subtype, expand the additional info
+                    if (isSubtype && defKey) {
+                        const additionalElement = document.getElementById(`additional-${defKey}`);
+                        const subtypesElement = document.getElementById(`subtypes-${defKey}`);
+                        
+                        if (additionalElement) {
+                            additionalElement.style.display = 'block';
+                        }
+                        if (subtypesElement) {
+                            subtypesElement.style.display = 'block';
+                        }
+                        
+                        // Scroll to and highlight the specific subtype
+                        setTimeout(() => {
+                            const targetElement = document.getElementById(`subdef-${subKey}`);
+                            if (targetElement) {
+                                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                
+                                // Highlight the found definition
+                                targetElement.style.background = '#fef3c7';
+                                targetElement.style.border = '3px solid #f59e0b';
+                                targetElement.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.5)';
+                                targetElement.style.animation = 'pulse 3s ease-in-out';
+                                
+                                // Remove highlight after 5 seconds
+                                setTimeout(() => {
+                                    targetElement.style.background = '';
+                                    targetElement.style.border = '';
+                                    targetElement.style.boxShadow = '';
+                                    targetElement.style.animation = '';
+                                }, 5000);
+                            }
+                        }, 500);
+                    } else {
+                        // Scroll to main definition
+                        setTimeout(() => {
+                            const targetElement = document.getElementById(`def-${defKey}`);
+                            if (targetElement) {
+                                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                
+                                // Highlight the found definition
+                                targetElement.style.background = '#f0fdf4';
+                                targetElement.style.border = '3px solid #22c55e';
+                                targetElement.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.5)';
+                                targetElement.style.animation = 'pulse 3s ease-in-out';
+                                
+                                // Remove highlight after 5 seconds
+                                setTimeout(() => {
+                                    targetElement.style.background = '';
+                                    targetElement.style.border = '';
+                                    targetElement.style.boxShadow = '';
+                                    targetElement.style.animation = '';
+                                }, 5000);
+                            }
+                        }, 500);
+                    }
+                    
+                    // Show success message
+                    showMessage('success', `✅ Found: ${searchTerm} - Definition highlighted below`);
+                } else {
+                    // Fallback: use regular search if exact match not found
+                    searchDefinitions(searchTerm);
+                    showMessage('info', `🔍 Searching for: ${searchTerm} - Check results below`);
+                }
+            }, 300);
+        }
+
+        // Helper function to show messages (you can style this as needed)
+        function showMessage(type, message) {
+            // Create a simple toast message
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#3b82f6'};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 9999;
+                max-width: 350px;
+                font-size: 14px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
         // Search definitions
         // Enhanced search definitions function that searches in subtypes too
         function searchDefinitions(searchTerm) {
@@ -4080,6 +4237,7 @@
         window.closeTooltip = closeTooltip;
         window.scrollToGunasthan = scrollToGunasthan;
         window.findAndShowDefinition = findAndShowDefinition;
+        window.showMessage = showMessage;
         window.toggleCategory = toggleCategory;
         window.toggleAdditionalInfo = toggleAdditionalInfo;
         window.showDefinitionDetail = showDefinitionDetail;
