@@ -3609,7 +3609,7 @@
         }
 
         // Load ALL Definitions
-        // Load ALL Definitions
+        // Load ALL Definitions with nested subtypes support
         function loadDefinitions() {
             const container = document.getElementById('definitions-list');
             let html = '';
@@ -3665,9 +3665,30 @@
                             const subDef = def.subtypes[subKey];
                             html += `
                                 <div class="sub-definition" onclick="showSubDefinitionDetail('${subKey}')">
-                                    <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})</div>
+                                    <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})
+                                        ${subDef.subtypes && Object.keys(subDef.subtypes).length > 0 ? 
+                                            `<button class="know-more-btn" style="margin-left: 8px; font-size: 10px; padding: 4px 8px;" onclick="event.stopPropagation(); toggleNestedSubtypes('${subKey}')">
+                                                <span id="nested-toggle-${subKey}">+</span>
+                                            </button>` : ''}
+                                    </div>
                                     <div class="sub-definition-content">${subDef.definition}</div>
                                     ${subDef.additionalNotes ? `<div style="margin-top: 8px; font-style: italic; color: #78350f;"><strong>विशेष:</strong> ${subDef.additionalNotes}</div>` : ''}
+                                    
+                                    ${subDef.subtypes && Object.keys(subDef.subtypes).length > 0 ? `
+                                        <div id="nested-subtypes-${subKey}" class="sub-definitions" style="display: none; margin-left: 20px; margin-top: 12px; border-left: 3px solid #e5e7eb; padding-left: 12px;">
+                                            <h5 style="margin-bottom: 8px; color: #374151; font-size: 14px;">Sub-categories:</h5>
+                                            ${Object.keys(subDef.subtypes).map(nestedKey => {
+                                                const nestedDef = subDef.subtypes[nestedKey];
+                                                return `
+                                                    <div class="sub-definition" style="margin-bottom: 8px; padding: 8px; background: #f9fafb; border-radius: 6px;" onclick="showNestedDefinitionDetail('${nestedKey}', '${subKey}')">
+                                                        <div class="sub-definition-title" style="font-size: 13px;">${nestedDef.nameHi} (${nestedDef.nameEn})</div>
+                                                        <div class="sub-definition-content" style="font-size: 12px;">${nestedDef.definition}</div>
+                                                        ${nestedDef.additionalNotes ? `<div style="margin-top: 6px; font-style: italic; color: #78350f; font-size: 11px;"><strong>विशेष:</strong> ${nestedDef.additionalNotes}</div>` : ''}
+                                                    </div>
+                                                `;
+                                            }).join('')}
+                                        </div>
+                                    ` : ''}
                                 </div>
                             `;
                         });
@@ -3682,6 +3703,50 @@
             });
             
             container.innerHTML = html;
+        }
+        
+        // Toggle nested subtypes
+        function toggleNestedSubtypes(subKey) {
+            const nestedElement = document.getElementById(`nested-subtypes-${subKey}`);
+            const toggleButton = document.getElementById(`nested-toggle-${subKey}`);
+            
+            if (nestedElement) {
+                const isVisible = nestedElement.style.display !== 'none';
+                nestedElement.style.display = isVisible ? 'none' : 'block';
+                
+                if (toggleButton) {
+                    toggleButton.textContent = isVisible ? '+' : '−';
+                }
+            }
+        }
+
+        // Show nested definition detail
+        function showNestedDefinitionDetail(nestedKey, parentKey) {
+            // Find the nested definition data
+            let foundNestedDef = null;
+            
+            Object.keys(definitionsDatabase).forEach(catKey => {
+                const category = definitionsDatabase[catKey];
+                Object.keys(category.definitions).forEach(defKey => {
+                    const def = category.definitions[defKey];
+                    if (def.subtypes && def.subtypes[parentKey] && def.subtypes[parentKey].subtypes && def.subtypes[parentKey].subtypes[nestedKey]) {
+                        foundNestedDef = def.subtypes[parentKey].subtypes[nestedKey];
+                        return;
+                    }
+                });
+            });
+            
+            if (foundNestedDef) {
+                let message = `${foundNestedDef.nameHi} (${foundNestedDef.nameEn})\n`;
+                message += `${foundNestedDef.english}\n\n`;
+                message += `${foundNestedDef.definition}`;
+                
+                if (foundNestedDef.additionalNotes) {
+                    message += `\n\nविशेष: ${foundNestedDef.additionalNotes}`;
+                }
+                
+                alert(message);
+            }
         }
         
         // Replace your existing showDetailedTooltip function with this accurate version
@@ -4291,6 +4356,8 @@
         window.toggleAdditionalInfo = toggleAdditionalInfo;
         window.showDefinitionDetail = showDefinitionDetail;
         window.showSubDefinitionDetail = showSubDefinitionDetail;
+        window.toggleNestedSubtypes = toggleNestedSubtypes;
+        window.showNestedDefinitionDetail = showNestedDefinitionDetail;
         window.launchGameMode = launchGameMode; // Add this line
     </script>
 </body>
