@@ -3609,6 +3609,7 @@
         }
 
         // Load ALL Definitions
+        // Load ALL Definitions
         function loadDefinitions() {
             const container = document.getElementById('definitions-list');
             let html = '';
@@ -3639,7 +3640,9 @@
                                     <div class="definition-subtitle">${def.english}</div>
                                 </div>
                                 ${def.additionalNotes || (def.subtypes && Object.keys(def.subtypes).length > 0) ? 
-                                    `<button class="know-more-btn" onclick="toggleAdditionalInfo('${defKey}')">Know More</button>` : ''}
+                                    `<button class="know-more-btn" onclick="toggleAdditionalInfo('${defKey}')">
+                                        <span id="toggle-text-${defKey}">Show Details</span>
+                                    </button>` : ''}
                             </div>
                             <div class="definition-content">${def.definition}</div>
                     `;
@@ -3661,7 +3664,7 @@
                         Object.keys(def.subtypes).forEach(subKey => {
                             const subDef = def.subtypes[subKey];
                             html += `
-                                <div class="sub-definition" onclick="showDefinitionDetail('${subKey}', '${subDef.nameHi}', '${subDef.nameEn}', '${subDef.english}', \`${subDef.definition}\`)">
+                                <div class="sub-definition" onclick="showSubDefinitionDetail('${subKey}')">
                                     <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})</div>
                                     <div class="sub-definition-content">${subDef.definition}</div>
                                     ${subDef.additionalNotes ? `<div style="margin-top: 8px; font-style: italic; color: #78350f;"><strong>विशेष:</strong> ${subDef.additionalNotes}</div>` : ''}
@@ -3680,6 +3683,7 @@
             
             container.innerHTML = html;
         }
+        
         // Replace your existing showDetailedTooltip function with this accurate version
         function showDetailedTooltip(gunasthanId, thanaIndex) {
             const modal = document.getElementById('tooltip-modal');
@@ -4092,15 +4096,31 @@
         }
 
         // Toggle additional information
+        // Toggle additional information
         function toggleAdditionalInfo(defKey) {
             const additionalElement = document.getElementById(`additional-${defKey}`);
             const subtypesElement = document.getElementById(`subtypes-${defKey}`);
+            const toggleButton = document.getElementById(`toggle-text-${defKey}`);
+            
+            let isVisible = false;
             
             if (additionalElement) {
-                additionalElement.style.display = additionalElement.style.display === 'none' ? 'block' : 'none';
+                const currentDisplay = additionalElement.style.display;
+                const newDisplay = currentDisplay === 'none' ? 'block' : 'none';
+                additionalElement.style.display = newDisplay;
+                if (newDisplay === 'block') isVisible = true;
             }
+            
             if (subtypesElement) {
-                subtypesElement.style.display = subtypesElement.style.display === 'none' ? 'block' : 'none';
+                const currentDisplay = subtypesElement.style.display;
+                const newDisplay = currentDisplay === 'none' ? 'block' : 'none';
+                subtypesElement.style.display = newDisplay;
+                if (newDisplay === 'block') isVisible = true;
+            }
+            
+            // Update button text
+            if (toggleButton) {
+                toggleButton.textContent = isVisible ? 'Hide Details' : 'Show Details';
             }
         }
 
@@ -4108,7 +4128,36 @@
         function showDefinitionDetail(key, nameHi, nameEn, english, definition) {
             alert(`${nameHi} (${nameEn})\n${english}\n\n${definition}`);
         }
-
+        // Show sub-definition detail with safe parameter handling
+        function showSubDefinitionDetail(subKey) {
+            // Find the subtype data
+            let foundSubDef = null;
+            let categoryTitle = '';
+            
+            Object.keys(definitionsDatabase).forEach(catKey => {
+                const category = definitionsDatabase[catKey];
+                Object.keys(category.definitions).forEach(defKey => {
+                    const def = category.definitions[defKey];
+                    if (def.subtypes && def.subtypes[subKey]) {
+                        foundSubDef = def.subtypes[subKey];
+                        categoryTitle = category.title;
+                        return;
+                    }
+                });
+            });
+            
+            if (foundSubDef) {
+                let message = `${foundSubDef.nameHi} (${foundSubDef.nameEn})\n`;
+                message += `${foundSubDef.english}\n\n`;
+                message += `${foundSubDef.definition}`;
+                
+                if (foundSubDef.additionalNotes) {
+                    message += `\n\nविशेष: ${foundSubDef.additionalNotes}`;
+                }
+                
+                alert(message);
+            }
+        }
         // Simple gunasthan detail (for overview)
         function showGunasthanDetail(gunasthanId) {
             const g = gunasthansData[gunasthanId];
@@ -4241,6 +4290,7 @@
         window.toggleCategory = toggleCategory;
         window.toggleAdditionalInfo = toggleAdditionalInfo;
         window.showDefinitionDetail = showDefinitionDetail;
+        window.showSubDefinitionDetail = showSubDefinitionDetail;
         window.launchGameMode = launchGameMode; // Add this line
     </script>
 </body>
