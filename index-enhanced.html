@@ -893,7 +893,20 @@
                     Search or browse by category to understand the meanings and significance.
                 </div>
             </div>
-            <input type="text" class="search-box" placeholder="Search definitions (Hindi/English/Sanskrit)..." oninput="searchDefinitions(this.value)">
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <input type="text" id="definition-search" class="search-box" placeholder="Search definitions (Hindi/English/Sanskrit)..." 
+                       oninput="searchDefinitions(this.value)" 
+                       onkeypress="if(event.key==='Enter') searchDefinitions(this.value)"
+                       style="flex: 1; margin-bottom: 0;">
+                <button onclick="searchDefinitions(document.getElementById('definition-search').value)" 
+                        style="background: #3b82f6; color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; white-space: nowrap;">
+                    🔍 Search
+                </button>
+                <button onclick="clearDefinitionSearch()" 
+                        style="background: #6b7280; color: white; border: none; padding: 14px 16px; border-radius: 12px; cursor: pointer; font-weight: 600;">
+                    Clear
+                </button>
+            </div>
             <div id="definitions-list"></div>
         </div>
     </div>
@@ -4820,9 +4833,6 @@
                 }, 300);
             }, 4000);
         }
-
-        // Search definitions
-        // Enhanced search definitions function that searches in subtypes too
         function searchDefinitions(searchTerm) {
             if (!searchTerm) {
                 loadDefinitions();
@@ -4846,22 +4856,22 @@
                     let hasSubtypeMatch = false;
                     let matchedSubtypeKeys = [];
                     
-                    // Check main definition
-                    if (def.nameHi.includes(searchTerm) || 
-                        def.nameEn.toLowerCase().includes(term) ||
-                        def.english.toLowerCase().includes(term) ||
-                        def.definition.includes(searchTerm)) {
+                    // Check main definition with null checks
+                    if ((def.nameHi && def.nameHi.includes(searchTerm)) || 
+                        (def.nameEn && def.nameEn.toLowerCase().includes(term)) ||
+                        (def.english && def.english.toLowerCase().includes(term)) ||
+                        (def.definition && def.definition.includes(searchTerm))) {
                         defFound = true;
                     }
                     
-                    // Check subtypes
+                    // Check subtypes with null checks
                     if (def.subtypes && Object.keys(def.subtypes).length > 0) {
                         Object.keys(def.subtypes).forEach(subKey => {
                             const subDef = def.subtypes[subKey];
-                            if (subDef.nameHi.includes(searchTerm) || 
-                                subDef.nameEn.toLowerCase().includes(term) ||
-                                subDef.english.toLowerCase().includes(term) ||
-                                subDef.definition.includes(searchTerm) ||
+                            if ((subDef.nameHi && subDef.nameHi.includes(searchTerm)) || 
+                                (subDef.nameEn && subDef.nameEn.toLowerCase().includes(term)) ||
+                                (subDef.english && subDef.english.toLowerCase().includes(term)) ||
+                                (subDef.definition && subDef.definition.includes(searchTerm)) ||
                                 (subDef.additionalNotes && subDef.additionalNotes.includes(searchTerm))) {
                                 defFound = true;
                                 hasSubtypeMatch = true;
@@ -4886,13 +4896,13 @@
                             <div class="definition-card" id="def-${defKey}">
                                 <div class="definition-header">
                                     <div>
-                                        <div class="definition-title">${def.nameHi} (${def.nameEn})</div>
-                                        <div class="definition-subtitle">${def.english}</div>
+                                        <div class="definition-title">${def.nameHi || ''} (${def.nameEn || ''})</div>
+                                        <div class="definition-subtitle">${def.english || ''}</div>
                                     </div>
                                     ${def.additionalNotes || (def.subtypes && Object.keys(def.subtypes).length > 0) ? 
                                         `<button class="know-more-btn" onclick="toggleAdditionalInfo('${defKey}')">Know More</button>` : ''}
                                 </div>
-                                <div class="definition-content">${def.definition}</div>
+                                <div class="definition-content">${def.definition || ''}</div>
                         `;
                         
                         if (def.additionalNotes) {
@@ -4914,8 +4924,8 @@
                                 const isMatched = matchedSubtypeKeys.includes(subKey);
                                 categoryHtml += `
                                     <div class="sub-definition" id="subdef-${subKey}" style="${isMatched ? 'background: #fef3c7; border: 2px solid #f59e0b;' : ''}">
-                                        <div class="sub-definition-title">${subDef.nameHi} (${subDef.nameEn})</div>
-                                        <div class="sub-definition-content">${subDef.definition}</div>
+                                        <div class="sub-definition-title">${subDef.nameHi || ''} (${subDef.nameEn || ''})</div>
+                                        <div class="sub-definition-content">${subDef.definition || ''}</div>
                                         ${subDef.additionalNotes ? `<div style="margin-top: 8px; font-style: italic; color: #78350f;"><strong>विशेष:</strong> ${subDef.additionalNotes}</div>` : ''}
                                     </div>
                                 `;
@@ -4932,8 +4942,8 @@
                     html += `
                         <div class="category-section">
                             <div class="category-header">
-                                <div class="category-title">${category.title}</div>
-                                <div class="category-subtitle">${category.titleEn} - ${category.english}</div>
+                                <div class="category-title">${category.title || ''}</div>
+                                <div class="category-subtitle">${category.titleEn || ''} - ${category.english || ''}</div>
                             </div>
                             <div class="collapsible-content expanded">
                                 ${categoryHtml}
@@ -5447,6 +5457,12 @@
         window.searchInOverview = searchInOverview;
         window.searchInMatrix = searchInMatrix;
         window.searchInTransitions = searchInTransitions;
+        // Clear definition search function
+        function clearDefinitionSearch() {
+            document.getElementById('definition-search').value = '';
+            loadDefinitions();
+        }
+        window.clearDefinitionSearch = clearDefinitionSearch;
     </script>
 </body>
 </html>
