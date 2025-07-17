@@ -1,38 +1,29 @@
-// Service Worker for Offline Support
-// Fixed version
-
-const CACHE_NAME = 'gunasthan-v1';
+const CACHE_NAME = 'gunasthan-v3';
 const urlsToCache = [
   './',
   './index.html',
-  './app.js'
-  // Removed manifest.json and icon files that might not exist
+  './index-enhanced.html',
+  './gunasthan_game.html',
+  './manifest.json'
 ];
 
-// Install event - cache all files
+// Install event
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
-        // Cache each file individually to handle errors
-        return Promise.all(
-          urlsToCache.map(url => {
-            return cache.add(url).catch(err => {
-              console.log('Failed to cache:', url, err);
-            });
-          })
-        );
+        console.log('Caching all files');
+        return cache.addAll(urlsToCache);
       })
   );
+  self.skipWaiting();
 });
 
-// Fetch event - serve from cache when offline
+// Fetch event
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return response
         if (response) {
           return response;
         }
@@ -42,18 +33,18 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Activate event - clean up old caches
+// Activate event
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
+          if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
         })
       );
     })
   );
+  self.clients.claim();
 });
