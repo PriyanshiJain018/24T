@@ -1092,7 +1092,16 @@
         }
         
         // Initialize on load
-        window.onload = init;
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            // If document is already loaded (dynamic loading scenario)
+            setTimeout(init, 100);
+        } else {
+            // Normal page load
+            window.onload = init;
+        }
+
+        // Expose init function globally for dynamic loading
+        window.detailedViewInit = init;
     </script>
 </body>
 </html>
