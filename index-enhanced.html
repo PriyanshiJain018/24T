@@ -4057,19 +4057,21 @@
                 loadTransitions();
             } else if (tabName === 'definitions' && !document.getElementById('definitions-list').innerHTML) {
                 loadDefinitions();
-            }
-              else if (tabName === 'detailed') {
+            } else if (tabName === 'detailed') {
                 // Load detailed view dynamically
                 if (!detailedViewLoaded) {
                     loadDetailedView().then(() => {
-                        // Initialize the detailed view after loading
-                        if (typeof init === 'function') {
-                            init(); // This will initialize the detailed view
-                        }
+                        // Ensure dropdowns are populated after a small delay
+                        setTimeout(() => {
+                            if (typeof updateSubItems === 'function') {
+                                updateSubItems();
+                            }
+                        }, 100);
                     });
                 }
             }
         }
+        
 
         // Load Overview
         // Load Overview with only PDF Source Disclaimer
@@ -5484,8 +5486,8 @@
             showMessage('info', `🔍 Highlighted transitions matching: ${searchTerm}`);
         }
 
-        // Cache for detailed view content
-let detailedViewLoaded = false;
+// Cache for detailed view content
+        let detailedViewLoaded = false;
 
         function loadDetailedView() {
             // Check if already loaded
@@ -5512,24 +5514,32 @@ let detailedViewLoaded = false;
                         }
                     }
                     
-                    // Extract body content (skip header since main app has one)
+                    // Extract body content
                     const bodyContent = doc.body.innerHTML;
                     
                     // Inject the content
                     document.getElementById('detailed-container').innerHTML = bodyContent;
                     
-                    // Re-initialize any JavaScript from the detailed view
-                    // The detailed view's script will work as-is since functions are global
+                    // Extract and execute scripts
                     const scripts = doc.querySelectorAll('script');
                     scripts.forEach(script => {
                         if (script.innerHTML && !script.src) {
+                            // Remove the window.onload line if present
+                            let scriptContent = script.innerHTML;
+                            scriptContent = scriptContent.replace('window.onload = init;', '');
+                            
                             // Create and execute script in global scope
                             const newScript = document.createElement('script');
-                            newScript.innerHTML = script.innerHTML;
+                            newScript.innerHTML = scriptContent;
                             document.body.appendChild(newScript);
-                            document.body.removeChild(newScript);
                         }
                     });
+                    
+                    // Now initialize the detailed view
+                    // Call updateSubItems directly to populate the dropdown
+                    if (typeof updateSubItems === 'function') {
+                        updateSubItems();
+                    }
                     
                     detailedViewLoaded = true;
                 })
@@ -5545,6 +5555,8 @@ let detailedViewLoaded = false;
                     `;
                 });
         }
+
+        
         // Make functions global
         window.showTab = showTab;
         window.searchThanas = searchThanas;
