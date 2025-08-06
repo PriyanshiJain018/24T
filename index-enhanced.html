@@ -724,17 +724,6 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Detailed View Container Isolation */
-        #detailed-container {
-            position: relative;
-            width: 100%;
-            min-height: calc(100vh - 140px);
-        }
-
-        #detailed-container .app-header {
-            display: none; /* Hide duplicate header */
-        }
-
         /* Mobile Optimizations */
         @media (max-width: 640px) {
             .app-title {
@@ -862,7 +851,6 @@
     <div class="tab-container">
         <button class="tab active" onclick="showTab('overview')">Overview</button>
         <button class="tab" onclick="showTab('matrix')">Matrix</button>
-        <button class="tab" onclick="showTab('detailed')">Detailed View</button>
         <button class="tab" onclick="showTab('transitions')">Transitions</button>
         <button class="tab" onclick="showTab('definitions')">Definitions</button>
     </div>
@@ -870,10 +858,15 @@
     <div class="content">
         <div id="overview-content" class="tab-content">
             <div class="info-section">
-                <div class="info-title">14 Spiritual Stages (गुणस्थान)</div>
+                <div class="info-title">एक विनम्र निवेदन</div>
                 <div class="info-description">
-                    Journey from complete delusion to liberation through 14 progressive stages of spiritual development.
-                    Each stage represents a distinct state of consciousness and karmic bondage.
+                    यह ऐप मात्र एक प्रयास है —
+                    चौबीस ठाणा को थोड़ा सरल, दृश्य और इंटरऐक्टिव रूप में प्रस्तुत करने का।
+                    
+                    💡 इसका उद्देश्य आपकी जिज्ञासा बढ़ाना है, समाधान देना नहीं ।
+                    
+                    👉 मूल अध्ययन सदैव आगम ग्रंथों, गुरुओं की वाणी और आत्म-चिंतन से ही करें।
+                    यह ऐप ना तो प्रवचन का विकल्प है, ना ही आध्यात्मिक निष्कर्ष का स्रोत।
                 </div>
             </div>
             <div id="gunasthan-list"></div>
@@ -901,22 +894,13 @@
             </div>
         </div>
         
-        <div id="detailed-content" class="tab-content hidden">
-            <div id="detailed-container">
-                <!-- Content will be loaded dynamically -->
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading Detailed View...</p>
-                </div>
-            </div>
-        </div>
-
         <div id="transitions-content" class="tab-content hidden">
             <div class="info-section">
                 <div class="info-title">Spiritual Progression Paths</div>
                 <div class="info-description">
                     Explore possible transitions between Gunasthanas. Each stage has specific paths forward or backward
-                    based on spiritual progress and karmic conditions.
+                    based on spiritual progress and karmic conditions. 
+                    विभिन्न गुणस्थान में आरोहण तथा अवरोहण  के नियम 
                 </div>
             </div>
             <div id="transitions-list"></div>
@@ -4057,23 +4041,8 @@
                 loadTransitions();
             } else if (tabName === 'definitions' && !document.getElementById('definitions-list').innerHTML) {
                 loadDefinitions();
-            } else if (tabName === 'detailed') {
-                // Load detailed view dynamically
-                if (!detailedViewLoaded) {
-                    loadDetailedView().then(() => {
-                        // After content is loaded
-                        setTimeout(() => {
-                            if (typeof window.detailedViewInit === 'function') {
-                                window.detailedViewInit();
-                            } else if (typeof init === 'function') {
-                                init();
-                            }
-                        }, 100);
-                    });
-                }
             }
         }
-        
 
         // Load Overview
         // Load Overview with only PDF Source Disclaimer
@@ -4169,7 +4138,7 @@
                             onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0'">
                             <div style="font-size: 32px; margin-bottom: 8px;">🔄</div>
                             <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">Transitions</div>
-                            <div style="font-size: 12px; color: #64748b;">Spiritual progression paths</div>
+                            <div style="font-size: 12px; color: #64748b;">गुणस्थान आरोहण-अवरोहण</div>
                         </div>
                         
                         <div onclick="showTab('definitions')" style="background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center;"
@@ -5373,8 +5342,7 @@
                 'overview': 'Overview Mode',
                 'matrix': 'Matrix Mode', 
                 'transitions': 'Transitions Mode',
-                'definitions': 'Definitions Mode',
-                'detailed': 'Detailed View Mode'
+                'definitions': 'Definitions Mode'
             };
             
             if (contextElement) {
@@ -5487,107 +5455,6 @@
             
             showMessage('info', `🔍 Highlighted transitions matching: ${searchTerm}`);
         }
-        // Cache for detailed view content
-        let detailedViewLoaded = false;
-
-        function loadDetailedView() {
-            // Check if already loaded
-            if (detailedViewLoaded) {
-                // If already loaded, just ensure dropdowns are populated
-                if (typeof updateSubItems === 'function') {
-                    updateSubItems();
-                }
-                return Promise.resolve();
-            }
-            
-            return fetch('detailed-view-tab_enhanced.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to load detailed view');
-                    return response.text();
-                })
-                .then(html => {
-                    // Extract body content and styles
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    
-                    // Extract and inject styles if not already present
-                    if (!document.getElementById('detailed-view-styles')) {
-                        const styles = doc.querySelector('style');
-                        if (styles) {
-                            const styleTag = document.createElement('style');
-                            styleTag.id = 'detailed-view-styles';
-                            styleTag.innerHTML = styles.innerHTML;
-                            document.head.appendChild(styleTag);
-                        }
-                    }
-                    
-                    // Extract body content (without script tags)
-                    let bodyHTML = '';
-                    for (let child of doc.body.children) {
-                        if (child.tagName !== 'SCRIPT') {
-                            bodyHTML += child.outerHTML;
-                        }
-                    }
-                    
-                    // Inject the HTML content first
-                    document.getElementById('detailed-container').innerHTML = bodyHTML;
-                    
-                    // Now extract and execute the script content
-                    const scripts = doc.querySelectorAll('script');
-                    let scriptContent = '';
-                    
-                    scripts.forEach(script => {
-                        if (script.innerHTML && !script.src) {
-                            scriptContent += script.innerHTML + '\n';
-                        }
-                    });
-                    
-                    // Remove the window.onload line
-                    scriptContent = scriptContent.replace('window.onload = init;', '');
-                    
-                    // Execute the script in global scope
-                    const scriptElement = document.createElement('script');
-                    scriptElement.textContent = scriptContent;
-                    document.body.appendChild(scriptElement);
-                    
-                    // Now that everything is loaded, initialize the detailed view
-                    // We need to wait a tick for the script to execute
-                    setTimeout(() => {
-                        // Call init function if it exists
-                        if (typeof init === 'function') {
-                            init();
-                        } else {
-                            // Fallback: manually call the initialization functions
-                            if (typeof updateSubItems === 'function') {
-                                updateSubItems();
-                            }
-                            if (typeof renderAnalysis === 'function') {
-                                renderAnalysis();
-                            }
-                        }
-                    }, 50);
-                    
-                    detailedViewLoaded = true;
-                })
-                .catch(error => {
-                    console.error('Error loading detailed view:', error);
-                    document.getElementById('detailed-container').innerHTML = `
-                        <div class="loading">
-                            <p style="color: #ef4444;">Failed to load Detailed View. Please ensure detailed-view-tab_enhanced.html is in the same directory.</p>
-                            <button onclick="retryDetailedViewLoad()" style="margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                                Retry
-                            </button>
-                        </div>
-                    `;
-                });
-        }
-
-        function retryDetailedViewLoad() {
-            detailedViewLoaded = false;
-            loadDetailedView();
-        }
-
-        
         // Make functions global
         window.showTab = showTab;
         window.searchThanas = searchThanas;
