@@ -724,6 +724,17 @@
             to { transform: rotate(360deg); }
         }
         
+        /* Detailed View Container Isolation */
+        #detailed-container {
+            position: relative;
+            width: 100%;
+            min-height: calc(100vh - 140px);
+        }
+
+        #detailed-container .app-header {
+            display: none; /* Hide duplicate header */
+        }
+
         /* Mobile Optimizations */
         @media (max-width: 640px) {
             .app-title {
@@ -851,6 +862,7 @@
     <div class="tab-container">
         <button class="tab active" onclick="showTab('overview')">Overview</button>
         <button class="tab" onclick="showTab('matrix')">Matrix</button>
+        <button class="tab" onclick="showTab('detailed')">Detailed View</button>
         <button class="tab" onclick="showTab('transitions')">Transitions</button>
         <button class="tab" onclick="showTab('definitions')">Definitions</button>
     </div>
@@ -858,15 +870,10 @@
     <div class="content">
         <div id="overview-content" class="tab-content">
             <div class="info-section">
-                <div class="info-title">एक विनम्र निवेदन</div>
+                <div class="info-title">14 Spiritual Stages (गुणस्थान)</div>
                 <div class="info-description">
-                    यह ऐप मात्र एक प्रयास है —
-                    चौबीस ठाणा को थोड़ा सरल, दृश्य और इंटरऐक्टिव रूप में प्रस्तुत करने का।
-                    
-                    💡 इसका उद्देश्य आपकी जिज्ञासा बढ़ाना है, समाधान देना नहीं ।
-                    
-                    👉 मूल अध्ययन सदैव आगम ग्रंथों, गुरुओं की वाणी और आत्म-चिंतन से ही करें।
-                    यह ऐप ना तो प्रवचन का विकल्प है, ना ही आध्यात्मिक निष्कर्ष का स्रोत।
+                    Journey from complete delusion to liberation through 14 progressive stages of spiritual development.
+                    Each stage represents a distinct state of consciousness and karmic bondage.
                 </div>
             </div>
             <div id="gunasthan-list"></div>
@@ -894,13 +901,22 @@
             </div>
         </div>
         
+        <div id="detailed-content" class="tab-content hidden">
+            <div id="detailed-container">
+                <!-- Content will be loaded dynamically -->
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading Detailed View...</p>
+                </div>
+            </div>
+        </div>
+
         <div id="transitions-content" class="tab-content hidden">
             <div class="info-section">
                 <div class="info-title">Spiritual Progression Paths</div>
                 <div class="info-description">
                     Explore possible transitions between Gunasthanas. Each stage has specific paths forward or backward
-                    based on spiritual progress and karmic conditions. 
-                    विभिन्न गुणस्थान में आरोहण तथा अवरोहण  के नियम 
+                    based on spiritual progress and karmic conditions.
                 </div>
             </div>
             <div id="transitions-list"></div>
@@ -3997,11 +4013,11 @@
             4: { canGoTo: [1, 2, 3, 5, 7], description: "Multiple paths including direct jump to complete vows" },
             5: { canGoTo: [1, 2, 3, 4, 7], description: "Can fall back or progress to monastic life" },
             6: { canGoTo: [1, 2, 3, 4, 5, 7], description: "Can progress to careful conduct or spiritual ladder" },
-            7: { canGoTo: [4, 6, 8], description: "विशेष - मरण की अपेक्षा से भी चतुर्थ गुणस्थान भी संभव " },
-            8: { canGoTo: [7, 9], description: "विशेष - मरण की अपेक्षा से भी चतुर्थ गुणस्थान भी संभव " },
+            7: { canGoTo: [6, 8], description: "विशेष - मरण की अपेक्षा से चतुर्थ गुणस्थान भी संभव " },
+            8: { canGoTo: [7, 9], description: "विशेष - मरण की अपेक्षा से चतुर्थ गुणस्थान भी संभव " },
             9: { canGoTo: [7, 10], description: "Can fall back or reach subtle greed stage" },
             10: { canGoTo: [7, 11, 12], description: "Can fall, subside, or destroy delusion" },
-            11: { canGoTo: [1, 4, 12, 13], description: "विशेष - मरण की अपेक्षा से भी चतुर्थ गुणस्थान संभव" },
+            11: { canGoTo: [1, 12, 13], description: "विशेष - मरण की अपेक्षा से चतुर्थ गुणस्थान भी संभव" },
             12: { canGoTo: [13], description: "Progresses to omniscience" },
             13: { canGoTo: [14], description: "Final transition to liberation" },
             14: { canGoTo: [], description: "Liberation (Moksha) - No further transitions" }
@@ -4041,6 +4057,17 @@
                 loadTransitions();
             } else if (tabName === 'definitions' && !document.getElementById('definitions-list').innerHTML) {
                 loadDefinitions();
+            }
+              else if (tabName === 'detailed') {
+                // Load detailed view dynamically
+                if (!detailedViewLoaded) {
+                    loadDetailedView().then(() => {
+                        // Initialize the detailed view after loading
+                        if (typeof init === 'function') {
+                            init(); // This will initialize the detailed view
+                        }
+                    });
+                }
             }
         }
 
@@ -4138,7 +4165,7 @@
                             onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none'; this.style.borderColor='#e2e8f0'">
                             <div style="font-size: 32px; margin-bottom: 8px;">🔄</div>
                             <div style="font-weight: 600; color: #1e293b; margin-bottom: 4px;">Transitions</div>
-                            <div style="font-size: 12px; color: #64748b;">गुणस्थान आरोहण-अवरोहण</div>
+                            <div style="font-size: 12px; color: #64748b;">Spiritual progression paths</div>
                         </div>
                         
                         <div onclick="showTab('definitions')" style="background: white; border: 2px solid #e2e8f0; border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.3s ease; text-align: center;"
@@ -5454,6 +5481,68 @@
             });
             
             showMessage('info', `🔍 Highlighted transitions matching: ${searchTerm}`);
+        }
+
+        // Cache for detailed view content
+let detailedViewLoaded = false;
+
+        function loadDetailedView() {
+            // Check if already loaded
+            if (detailedViewLoaded) return Promise.resolve();
+            
+            return fetch('detailed-view-tab_enhanced.html')
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to load detailed view');
+                    return response.text();
+                })
+                .then(html => {
+                    // Extract body content and styles
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Extract and inject styles if not already present
+                    if (!document.getElementById('detailed-view-styles')) {
+                        const styles = doc.querySelector('style');
+                        if (styles) {
+                            const styleTag = document.createElement('style');
+                            styleTag.id = 'detailed-view-styles';
+                            styleTag.innerHTML = styles.innerHTML;
+                            document.head.appendChild(styleTag);
+                        }
+                    }
+                    
+                    // Extract body content (skip header since main app has one)
+                    const bodyContent = doc.body.innerHTML;
+                    
+                    // Inject the content
+                    document.getElementById('detailed-container').innerHTML = bodyContent;
+                    
+                    // Re-initialize any JavaScript from the detailed view
+                    // The detailed view's script will work as-is since functions are global
+                    const scripts = doc.querySelectorAll('script');
+                    scripts.forEach(script => {
+                        if (script.innerHTML && !script.src) {
+                            // Create and execute script in global scope
+                            const newScript = document.createElement('script');
+                            newScript.innerHTML = script.innerHTML;
+                            document.body.appendChild(newScript);
+                            document.body.removeChild(newScript);
+                        }
+                    });
+                    
+                    detailedViewLoaded = true;
+                })
+                .catch(error => {
+                    console.error('Error loading detailed view:', error);
+                    document.getElementById('detailed-container').innerHTML = `
+                        <div class="loading">
+                            <p style="color: #ef4444;">Failed to load Detailed View. Please ensure detailed-view-tab_enhanced.html is in the same directory.</p>
+                            <button onclick="loadDetailedView()" style="margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                Retry
+                            </button>
+                        </div>
+                    `;
+                });
         }
         // Make functions global
         window.showTab = showTab;
