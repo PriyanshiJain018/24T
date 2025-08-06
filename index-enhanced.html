@@ -5485,13 +5485,18 @@
             
             showMessage('info', `🔍 Highlighted transitions matching: ${searchTerm}`);
         }
-
-// Cache for detailed view content
+        // Cache for detailed view content
         let detailedViewLoaded = false;
 
         function loadDetailedView() {
             // Check if already loaded
-            if (detailedViewLoaded) return Promise.resolve();
+            if (detailedViewLoaded) {
+                // If already loaded, just ensure dropdowns are populated
+                if (typeof updateSubItems === 'function') {
+                    updateSubItems();
+                }
+                return Promise.resolve();
+            }
             
             return fetch('detailed-view-tab_enhanced.html')
                 .then(response => {
@@ -5514,32 +5519,51 @@
                         }
                     }
                     
-                    // Extract body content
-                    const bodyContent = doc.body.innerHTML;
+                    // Extract body content (without script tags)
+                    let bodyHTML = '';
+                    for (let child of doc.body.children) {
+                        if (child.tagName !== 'SCRIPT') {
+                            bodyHTML += child.outerHTML;
+                        }
+                    }
                     
-                    // Inject the content
-                    document.getElementById('detailed-container').innerHTML = bodyContent;
+                    // Inject the HTML content first
+                    document.getElementById('detailed-container').innerHTML = bodyHTML;
                     
-                    // Extract and execute scripts
+                    // Now extract and execute the script content
                     const scripts = doc.querySelectorAll('script');
+                    let scriptContent = '';
+                    
                     scripts.forEach(script => {
                         if (script.innerHTML && !script.src) {
-                            // Remove the window.onload line if present
-                            let scriptContent = script.innerHTML;
-                            scriptContent = scriptContent.replace('window.onload = init;', '');
-                            
-                            // Create and execute script in global scope
-                            const newScript = document.createElement('script');
-                            newScript.innerHTML = scriptContent;
-                            document.body.appendChild(newScript);
+                            scriptContent += script.innerHTML + '\n';
                         }
                     });
                     
-                    // Now initialize the detailed view
-                    // Call updateSubItems directly to populate the dropdown
-                    if (typeof updateSubItems === 'function') {
-                        updateSubItems();
-                    }
+                    // Remove the window.onload line
+                    scriptContent = scriptContent.replace('window.onload = init;', '');
+                    
+                    // Execute the script in global scope
+                    const scriptElement = document.createElement('script');
+                    scriptElement.textContent = scriptContent;
+                    document.body.appendChild(scriptElement);
+                    
+                    // Now that everything is loaded, initialize the detailed view
+                    // We need to wait a tick for the script to execute
+                    setTimeout(() => {
+                        // Call init function if it exists
+                        if (typeof init === 'function') {
+                            init();
+                        } else {
+                            // Fallback: manually call the initialization functions
+                            if (typeof updateSubItems === 'function') {
+                                updateSubItems();
+                            }
+                            if (typeof renderAnalysis === 'function') {
+                                renderAnalysis();
+                            }
+                        }
+                    }, 50);
                     
                     detailedViewLoaded = true;
                 })
@@ -5548,12 +5572,17 @@
                     document.getElementById('detailed-container').innerHTML = `
                         <div class="loading">
                             <p style="color: #ef4444;">Failed to load Detailed View. Please ensure detailed-view-tab_enhanced.html is in the same directory.</p>
-                            <button onclick="loadDetailedView()" style="margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            <button onclick="retryDetailedViewLoad()" style="margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">
                                 Retry
                             </button>
                         </div>
                     `;
                 });
+        }
+
+        function retryDetailedViewLoad() {
+            detailedViewLoaded = false;
+            loadDetailedView();
         }
 
         
