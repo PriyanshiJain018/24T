@@ -4061,10 +4061,12 @@
                 // Load detailed view dynamically
                 if (!detailedViewLoaded) {
                     loadDetailedView().then(() => {
-                        // Ensure dropdowns are populated after a small delay
+                        // After content is loaded
                         setTimeout(() => {
-                            if (typeof updateSubItems === 'function') {
-                                updateSubItems();
+                            if (typeof window.detailedViewInit === 'function') {
+                                window.detailedViewInit();
+                            } else if (typeof init === 'function') {
+                                init();
                             }
                         }, 100);
                     });
