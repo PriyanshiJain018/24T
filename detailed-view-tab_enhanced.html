@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed View - Focused Analysis | विस्तृत विश्लेषण</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: #f3f4f6;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        
+        .app-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .app-subtitle {
+            font-size: 14px;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        /* Control Panel */
+        .control-panel {
+            background: white;
+            padding: 24px;
+            margin: 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e5e7eb;
+        }
+        
+        .control-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-header::before {
+            content: '🎯';
+            font-size: 24px;
+        }
+        
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        
+        .control-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .control-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 8px;
+        }
+        
+        .control-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .control-select:hover {
+            border-color: #9ca3af;
+        }
+        
+        .control-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Analysis Button */
+        .analyze-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Dynamic Title Section */
+        .analysis-header {
+            margin: 0 20px 20px 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            border-radius: 12px;
+            border: 1px solid #c7d2fe;
+        }
+        
+        .analysis-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .analysis-subtitle {
+            font-size: 16px;
+            color: #3730a3;
+        }
+        
+        /* Content Container */
+        .content-container {
+            padding: 0 20px 40px 20px;
+        }
+        
+        /* Thana Cards Grid */
+        .thana-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        /* Thana Card */
+        .thana-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .thana-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #d1d5db;
+        }
+        
+        .thana-card:active {
+            transform: scale(0.98);
+        }
+        
+        /* Card Header */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .card-icon {
+            font-size: 32px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3f4f6;
+            border-radius: 12px;
+        }
+        
+        .card-title {
+            flex: 1;
+        }
+        
+        .card-name-hi {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+        
+        .card-name-en {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 16px;
+        }
+        
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .progress-label {
+            color: #6b7280;
+        }
+        
+        .progress-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+        
+        /* Status Indicators */
+        .status-indicators {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .status-badge {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-badge.present {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #86efac;
+        }
+        
+        .status-badge.absent {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+        
+        /* View Details Button */
+        .view-details-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 10px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .view-details-btn:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            max-height: 85vh;
+            border-radius: 24px 24px 0 0;
+            padding: 8px 24px 24px;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-top: 16px;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .modal-title-section {
+            flex: 1;
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .modal-subtitle {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .modal-context {
+            font-size: 14px;
+            color: #3b82f6;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .close-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: #f3f4f6;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        /* Modal Stats */
+        .modal-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e40af;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        /* Modal Sections */
+        .modal-section {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .modal-section.present {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+        
+        .modal-section.absent {
+            background: #fef2f2;
+            border-color: #fca5a5;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-title.present {
+            color: #16a34a;
+        }
+        
+        .section-title.absent {
+            color: #dc2626;
+        }
+        
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .section-icon.present {
+            background: #22c55e;
+            color: white;
+        }
+        
+        .section-icon.absent {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .section-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .item-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            background: white;
+            border-radius: 8px;
+            font-size: 13px;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .item-tag:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #6b7280;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .control-panel {
+                margin: 16px;
+                padding: 20px;
+            }
+            
+            .controls-row {
+                flex-direction: column;
+            }
+            
+            .control-group {
+                min-width: 100%;
+            }
+            
+            .analyze-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .thana-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .modal-content {
+                max-height: 90vh;
+            }
+        }
+        
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-4 {
+            margin-top: 16px;
+        }
+        
+        .mb-4 {
+            margin-bottom: 16px;
+        }
+        
+        /* Help Tooltip */
+        .help-text {
+            background: #fef3c7;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 20px;
+            font-size: 14px;
+            color: #78350f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .help-icon {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="app-header">
+        <h1 class="app-title">Detailed View - Focused Analysis</h1>
+        <p class="app-subtitle">विस्तृत विश्लेषण - Select any category and item to see all 24 Thanas</p>
+    </div>
+    
+    <!-- Help Text -->
+    <div class="help-text">
+        <span class="help-icon">💡</span>
+        <span>Select a primary category (like Gunasthan or Gati), then choose a specific item to analyze how all 24 Thanas apply to that condition.</span>
+    </div>
+    
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <h3 class="control-header">Choose Your Analysis Focus</h3>
+        <div class="controls-row">
+            <div class="control-group">
+                <label class="control-label" for="primary-category">Analyze by Category:</label>
+                <select id="primary-category" class="control-select" onchange="updateSubItems()">
+                    <option value="gunasthan">गुणस्थान - Gunasthan (Spiritual Stages)</option>
+                    <option value="gati">गति - Gati (States of Existence)</option>
+                    <option value="indriya">इन्द्रिय - Indriya (Senses)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label" for="sub-item">Select Item:</label>
+                <select id="sub-item" class="control-select">
+                    <!-- Dynamically populated -->
+                </select>
+            </div>
+            
+            <button class="analyze-btn" onclick="renderAnalysis()">
+                <span>🔍</span>
+                <span>Analyze</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Analysis Header -->
+    <div class="analysis-header" id="analysis-header" style="display: none;">
+        <h2 class="analysis-title" id="analysis-title">Analysis Results</h2>
+        <p class="analysis-subtitle" id="analysis-subtitle">Showing all 24 Thanas</p>
+    </div>
+    
+    <!-- Content Container -->
+    <div class="content-container">
+        <div id="thana-grid" class="thana-grid">
+            <!-- Initial loading state -->
+            <div class="loading" style="grid-column: 1/-1;">
+                <div class="loading-spinner"></div>
+                <p>Select a category and item above to begin analysis</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title-section">
+                    <h3 class="modal-title" id="modal-title">Details</h3>
+                    <p class="modal-subtitle" id="modal-subtitle">Complete breakdown</p>
+                    <p class="modal-context" id="modal-context">Context</p>
+                </div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            
+            <div class="modal-stats">
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-present">0</span>
+                    <span class="stat-label">Present</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-absent">0</span>
+                    <span class="stat-label">Absent</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" id="stat-total">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+            </div>
+            
+            <div id="modal-body">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data structures
+        const gunasthansData = {
+            1: { nameHi: "मिथ्यात्व", nameEn: "Mithyatva", english: "False Belief", color: "#EF4444" },
+            2: { nameHi: "सासादन", nameEn: "Sasadan", english: "Downfall", color: "#F87171" },
+            3: { nameHi: "मिश्र", nameEn: "Mishra", english: "Mixed Belief", color: "#FB923C" },
+            4: { nameHi: "अविरत सम्यग्दृष्टि", nameEn: "Avirat Samyagdrishti", english: "Right Belief without Conduct", color: "#FBBF24" },
+            5: { nameHi: "देशविरत", nameEn: "Deshvirat", english: "Partial Vows", color: "#A3E635" },
+            6: { nameHi: "प्रमत्तविरत", nameEn: "Pramattavirat", english: "Careless Conduct", color: "#4ADE80" },
+            7: { nameHi: "अप्रमत्तविरत", nameEn: "Apramattavirat", english: "Careful Conduct", color: "#10B981" },
+            8: { nameHi: "अपूर्वकरण", nameEn: "Apurvakarana", english: "Unprecedented Thought-activity", color: "#14B8A6" },
+            9: { nameHi: "अनिवृत्तिकरण", nameEn: "Anivrittikarana", english: "Subtle Passion", color: "#06B6D4" },
+            10: { nameHi: "सूक्ष्मसांपराय", nameEn: "Sukshmasamparaya", english: "Subtle Greed", color: "#3B82F6" },
+            11: { nameHi: "उपशांत मोह", nameEn: "Upashanta Moha", english: "Subsided Delusion", color: "#6366F1" },
+            12: { nameHi: "क्षीणमोह", nameEn: "Kshina Moha", english: "Destroyed Delusion", color: "#8B5CF6" },
+            13: { nameHi: "सयोगकेवली", nameEn: "Sayogakevali", english: "Omniscient with Activity", color: "#EC4899" },
+            14: { nameHi: "अयोगकेवली", nameEn: "Ayogakevali", english: "Omniscient without Activity", color: "#F59E0B" }
+        };
+        
+        const thanasData = [
+            { nameHi: "गति", nameEn: "Gati", english: "State of Existence", total: 4, icon: "🌍",
+              subtypes: ["नरकगति", "तिर्यंचगति", "मनुष्यगति", "देवगति"] },
+            { nameHi: "इन्द्रिय", nameEn: "Indriya", english: "Senses", total: 5, icon: "👁️",
+              subtypes: ["एकेन्द्रिय", "द्वीन्द्रिय", "त्रीन्द्रिय", "चतुरिन्द्रिय", "पंचेन्द्रिय"] },
+            { nameHi: "काय", nameEn: "Kaya", english: "Body", total: 6, icon: "🧘",
+              subtypes: ["पृथ्वीकायिक", "जलकायिक", "अग्निकायिक", "वायुकायिक", "वनस्पतिकायिक", "त्रसकायिक"] },
+            { nameHi: "योग", nameEn: "Yoga", english: "Activity", total: 15, icon: "⚡",
+              subtypes: ["सत्य मनोयोग", "असत्य मनोयोग", "उभय मनोयोग", "अनुभय मनोयोग", "सत्य वचनयोग", 
+                         "असत्य वचनयोग", "उभय वचनयोग", "अनुभय वचनयोग", "कार्माण काययोग", 
+                         "औदारिक मिश्र योग", "औदारिक काययोग", "वैक्रियिक मिश्र योग", 
+                         "वैक्रियिक काययोग", "आहारक मिश्र योग", "आहारक काययोग"] },
+            { nameHi: "वेद", nameEn: "Veda", english: "Gender-inclination", total: 3, icon: "⚥",
+              subtypes: ["स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"] },
+            { nameHi: "कषाय", nameEn: "Kashaya", english: "Passions", total: 25, icon: "🔥",
+              subtypes: ["अनन्तानुबंधी क्रोध", "अनन्तानुबंधी मान", "अनन्तानुबंधी माया", "अनन्तानुबंधी लोभ",
+                         "अप्रत्याख्यानावरण क्रोध", "अप्रत्याख्यानावरण मान", "अप्रत्याख्यानावरण माया", "अप्रत्याख्यानावरण लोभ",
+                         "प्रत्याख्यानावरण क्रोध", "प्रत्याख्यानावरण मान", "प्रत्याख्यानावरण माया", "प्रत्याख्यानावरण लोभ",
+                         "संज्वलन क्रोध", "संज्वलन मान", "संज्वलन माया", "संज्वलन लोभ",
+                         "हास्य", "रति", "अरति", "शोक", "भय", "जुगुप्सा", "स्त्रीवेद", "पुरुषवेद", "नपुंसकवेद"] },
+            { nameHi: "ज्ञान", nameEn: "Gyan", english: "Knowledge", total: 8, icon: "🧠",
+              subtypes: ["कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान", "मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान"] },
+            { nameHi: "संयम", nameEn: "Samyam", english: "Self-restraint", total: 7, icon: "🛡️",
+              subtypes: ["असंयम", "संयमासंयम", "सामायिक", "छेदोपस्थापना", "परिहार विशुद्धि", "सूक्ष्मसांपराय", "यथाख्यात"] },
+            { nameHi: "दर्शन", nameEn: "Darshan", english: "Perception", total: 4, icon: "👀",
+              subtypes: ["चक्षुदर्शन", "अचक्षुदर्शन", "अवधिदर्शन", "केवलदर्शन"] },
+            { nameHi: "लेश्या", nameEn: "Leshya", english: "Aura", total: 6, icon: "🌈",
+              subtypes: ["कृष्ण लेश्या", "नील लेश्या", "कापोत लेश्या", "पीत लेश्या", "पद्म लेश्या", "शुक्ल लेश्या"] },
+            { nameHi: "भव्य", nameEn: "Bhavya", english: "Capability", total: 2, icon: "✨",
+              subtypes: ["भव्य", "अभव्य"] },
+            { nameHi: "सम्यक्त्व", nameEn: "Samyaktva", english: "Right Belief", total: 6, icon: "💎",
+              subtypes: ["मिथ्यात्व", "सासादन", "मिश्र", "क्षयोपशम", "उपशम", "क्षायिक"] },
+            { nameHi: "संज्ञी", nameEn: "Sangyi", english: "Consciousness", total: 2, icon: "🧩",
+              subtypes: ["संज्ञी", "असंज्ञी"] },
+            { nameHi: "आहारक", nameEn: "Aaharaka", english: "Assimilator", total: 2, icon: "🍃",
+              subtypes: ["आहारक", "अनाहारक"] },
+            { nameHi: "गुणस्थान", nameEn: "Gunasthan", english: "Spiritual Stages", total: 14, icon: "📶",
+              subtypes: ["मिथ्यात्व", "सासादन", "मिश्र", "अविरत", "देशविरत", "प्रमत्त", "अप्रमत्त", 
+                         "अपूर्वकरण", "अनिवृत्ति", "सूक्ष्म", "उपशांत", "क्षीण", "सयोग", "अयोग"] },
+            { nameHi: "जीवसमास", nameEn: "Jivasamas", english: "Life Classes", total: 19, icon: "🌱",
+              subtypes: ["पृथ्वीकायिक सूक्ष्म", "पृथ्वीकायिक बादर", "जलकायिक सूक्ष्म", "जलकायिक बादर",
+                         "अग्निकायिक सूक्ष्म", "अग्निकायिक बादर", "वायुकायिक सूक्ष्म", "वायुकायिक बादर",
+                         "नित्य निगोद सूक्ष्म", "नित्य निगोद बादर", "इतर निगोद सूक्ष्म", "इतर निगोद बादर",
+                         "सप्रतिष्ठित प्रत्येक वनस्पति", "अप्रतिष्ठित प्रत्येक वनस्पति", "द्वीन्द्रिय जीव बादर",
+                         "त्रीन्द्रिय जीव बादर", "चतुरिन्द्रिय जीव बादर", "असंज्ञी पंचेन्द्रिय जीव बादर", 
+                         "संज्ञी पंचेन्द्रिय जीव बादर"] },
+            { nameHi: "पर्याप्ति", nameEn: "Paryapti", english: "Developmental Stages", total: 6, icon: "🌿",
+              subtypes: ["आहार", "शरीर", "इन्द्रिय", "श्वासोच्छ्वास", "भाषा", "मन"] },
+            { nameHi: "प्राण", nameEn: "Pran", english: "Vitalities", total: 10, icon: "💨",
+              subtypes: ["स्पर्शन", "रसना", "घ्राण", "चक्षु", "श्रोत्र", "मनोबल", "वचनबल", "कायबल", "श्वासोच्छ्वास", "आयु"] },
+            { nameHi: "संज्ञा", nameEn: "Sangya", english: "Instincts", total: 4, icon: "🎯",
+              subtypes: ["आहार", "भय", "मैथुन", "परिग्रह"] },
+            { nameHi: "उपयोग", nameEn: "Upayog", english: "Conscious Manifestation", total: 12, icon: "🔮",
+              subtypes: ["मतिज्ञान", "श्रुतज्ञान", "अवधिज्ञान", "मनःपर्ययज्ञान", "केवलज्ञान",
+                         "कुमतिज्ञान", "कुश्रुतज्ञान", "कुअवधिज्ञान", "चक्षुदर्शन", "अचक्षुदर्शन", 
+                         "अवधिदर्शन", "केवलदर्शन"] },
+            { nameHi: "ध्यान", nameEn: "Dhyana", english: "Meditation", total: 16, icon: "🧘‍♀️",
+              subtypes: ["इष्टवियोगज", "अनिष्टसंयोगज", "पीड़ाचिंतन", "निदान", "हिंसानंद", "मृषानंद", 
+                         "चौर्यानंद", "परिग्रहानंद", "आज्ञाविचय", "अपायविचय", "विपाकविचय", "संस्थानविचय",
+                         "पृथक्त्वविर्तक", "एकत्वविर्तक", "सूक्ष्मक्रिया", "व्युपरतक्रिया"] },
+            { nameHi: "आस्रव", nameEn: "Ashrav", english: "Influx of Karma", total: 57, icon: "⬇️",
+              subtypes: ["मिथ्यात्व (5)", "योग (15)", "अविरति (12)", "कषाय (25)"] },
+            { nameHi: "जाति", nameEn: "Jati", english: "Species", total: 84, icon: "🦋",
+              subtypes: ["84 लाख योनियाँ"] },
+            { nameHi: "कुल", nameEn: "Kula", english: "Family", total: 199.5, icon: "👥",
+              subtypes: ["199.5 लाख करोड़ उप-श्रेणियाँ"] }
+        ];
+        
+        // Matrix data for Gunasthan (simplified for demo)
+        const matrixData = {
+            1: [4,5,6,13,3,25,3,1,2,6,2,1,2,2,1,19,6,10,4,5,8,55,84,199.5],
+            2: [4,1,1,13,3,25,3,1,2,6,1,1,1,2,1,1,6,10,4,5,8,50,26,108.5],
+            3: [4,1,1,10,3,21,2,1,2,6,1,1,1,1,1,1,6,10,4,5,9,43,26,108.5],
+            4: [4,1,1,13,3,21,3,1,3,6,1,3,1,2,1,1,6,10,4,6,10,46,26,108.5],
+            5: [2,1,1,9,3,17,3,1,3,3,1,3,1,1,1,1,6,10,4,6,11,37,18,57.5],
+            6: [1,1,1,11,3,13,4,3,3,3,1,3,1,1,1,1,6,10,4,7,7,24,14,14],
+            7: [1,1,1,9,3,13,4,3,3,3,1,3,1,1,1,1,6,10,3,7,4,22,14,14],
+            8: [1,1,1,9,3,13,4,2,3,1,1,2,1,1,1,1,6,10,3,7,1,22,14,14],
+            9: [1,1,1,9,3,7,4,2,3,1,1,2,1,1,1,1,6,10,2,7,1,16,14,14],
+            10: [1,1,1,9,0,1,4,1,3,1,1,2,1,1,1,1,6,10,1,7,1,10,14,14],
+            11: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
+            12: [1,1,1,9,0,0,4,1,3,1,1,1,1,1,1,1,6,10,0,7,1,9,14,14],
+            13: [1,1,1,7,0,0,1,1,1,1,1,1,0,2,1,1,6,4,0,2,1,7,14,14],
+            14: [1,1,1,0,0,0,1,1,1,0,1,1,0,1,1,1,6,1,0,2,1,0,14,14]
+        };
+        
+        // Additional matrices data for Gati and Indriya
+        const additionalMatrices = {
+            'gati': {
+                data: {
+                    0: [1,1,1,1],     // गति
+                    1: [1,5,1,1],     // इन्द्रिय
+                    2: [1,6,1,1],     // काय
+                    3: [11,11,13,11], // योग
+                    4: [1,3,3,2],     // वेद
+                    5: [23,25,25,24], // कषाय
+                    6: [3,6,8,6],     // ज्ञान
+                    7: [1,2,7,1],     // संयम
+                    8: [3,3,4,3],     // दर्शन
+                    9: [3,6,6,6],     // लेश्या
+                    10: [2,2,2,2],    // भव्यत्व
+                    11: [1,6,6,6],    // सम्यक्त्व
+                    12: [1,2,1,1],    // संज्ञी
+                    13: [2,2,2,2],    // आहारक
+                    14: [4,5,14,4],   // गुणस्थान
+                    15: [1,19,1,1],   // जीवसमास
+                    16: [6,6,6,6],    // पर्याप्ति
+                    17: [10,10,10,10], // प्राण
+                    18: [4,4,4,4],    // संज्ञा
+                    19: [9,9,12,9],   // उपयोग
+                    20: [8,11,16,10], // ध्यान
+                    21: [51,53,55,52], // आस्रव
+                    22: [4,62,14,4],  // जाति
+                    23: [25,134.5,14,26] // कुल
+                }
+            },
+            'indriya': {
+                data: {
+                    0: [1,1,1,1,4],   // गति
+                    1: [1,1,1,1,1],   // इन्द्रिय
+                    2: [5,1,1,1,1],   // काय
+                    3: [3,4,4,4,15],  // योग
+                    4: [1,1,1,1,3],   // वेद
+                    5: [23,23,23,23,25], // कषाय
+                    6: [2,2,2,2,8],   // ज्ञान
+                    7: [1,1,1,1,7],   // संयम
+                    8: [1,1,1,2,4],   // दर्शन
+                    9: [3,3,3,3,6],   // लेश्या
+                    10: [2,2,2,2,2],  // भव्यत्व
+                    11: [1,1,1,1,6],  // सम्यक्त्व
+                    12: [1,1,1,1,2],  // संज्ञी
+                    13: [2,2,2,2,2],  // आहारक
+                    14: [1,1,1,1,14], // गुणस्थान
+                    15: [14,1,1,1,2], // जीवसमास
+                    16: [4,5,5,5,6],  // पर्याप्ति
+                    17: [4,6,7,8,10], // प्राण
+                    18: [4,4,4,4,4],  // संज्ञा
+                    19: [3,3,3,4,12], // उपयोग
+                    20: [8,8,8,8,16], // ध्यान
+                    21: [38,40,41,42,57], // आस्रव
+                    22: [52,2,2,2,26], // जाति
+                    23: [67,7,8,9,108.5] // कुल
+                }
+            }
+        };
+        
+        // Category configurations
+        const categoryConfigs = {
+            'gunasthan': {
+                name: 'Gunasthan',
+                items: gunasthansData,
+                getLabel: (id) => `G${id}: ${gunasthansData[id].nameHi}`,
+                getColor: (id) => gunasthansData[id].color
+            },
+            'gati': {
+                name: 'Gati',
+                items: thanasData[0].subtypes,
+                getLabel: (index) => thanasData[0].subtypes[index],
+                getColor: () => '#3b82f6'
+            },
+            'indriya': {
+                name: 'Indriya',
+                items: thanasData[1].subtypes,
+                getLabel: (index) => thanasData[1].subtypes[index],
+                getColor: () => '#10b981'
+            }
+        };
+        
+        let currentCategory = 'gunasthan';
+        let currentSubItem = 0;
+        
+        // Initialize
+        function init() {
+            updateSubItems();
+            renderAnalysis();
+        }
+        
+        // Update sub-items based on selected category
+        function updateSubItems() {
+            const category = document.getElementById('primary-category').value;
+            const subItemSelect = document.getElementById('sub-item');
+            const config = categoryConfigs[category];
+            
+            subItemSelect.innerHTML = '';
+            
+            if (category === 'gunasthan') {
+                Object.keys(config.items).forEach(id => {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = config.getLabel(id);
+                    subItemSelect.appendChild(option);
+                });
+            } else {
+                config.items.forEach((item, index) => {
+                    const option = document.createElement('option');
+                    option.value = index;
+                    option.textContent = item;
+                    subItemSelect.appendChild(option);
+                });
+            }
+            
+            currentCategory = category;
+        }
+        
+        // Get data for a specific thana in the current context
+        function getThanaData(thanaIndex) {
+            const subItemValue = document.getElementById('sub-item').value;
+            
+            if (currentCategory === 'gunasthan') {
+                const gunasthanId = parseInt(subItemValue);
+                return matrixData[gunasthanId][thanaIndex];
+            } else {
+                const matrix = additionalMatrices[currentCategory];
+                const subItemIndex = parseInt(subItemValue);
+                return matrix.data[thanaIndex][subItemIndex];
+            }
+        }
+        
+        // Get progress color
+        function getProgressColor(percentage) {
+            if (percentage === 0) return '#9CA3AF';
+            if (percentage < 25) return '#10B981';
+            if (percentage < 50) return '#F59E0B';
+            if (percentage < 75) return '#F97316';
+            return '#EF4444';
+        }
+        
+        // Render the analysis
+        function renderAnalysis() {
+            const category = document.getElementById('primary-category').value;
+            const subItemValue = document.getElementById('sub-item').value;
+            const config = categoryConfigs[category];
+            
+            // Update header
+            const analysisHeader = document.getElementById('analysis-header');
+            const analysisTitle = document.getElementById('analysis-title');
+            const analysisSubtitle = document.getElementById('analysis-subtitle');
+            
+            analysisHeader.style.display = 'block';
+            
+            if (category === 'gunasthan') {
+                const g = gunasthansData[subItemValue];
+                analysisTitle.textContent = `Analysis for ${config.getLabel(subItemValue)}`;
+                analysisSubtitle.textContent = `${g.nameEn} - ${g.english} | Showing all 24 Thanas`;
+            } else {
+                const itemName = config.items[subItemValue];
+                analysisTitle.textContent = `Analysis for ${config.name}: ${itemName}`;
+                analysisSubtitle.textContent = `Showing how all 24 Thanas apply to this ${config.name}`;
+            }
+            
+            // Render thana cards
+            const grid = document.getElementById('thana-grid');
+            grid.innerHTML = '';
+            
+            thanasData.forEach((thana, thanaIndex) => {
+                const count = getThanaData(thanaIndex);
+                const total = thana.total;
+                const percentage = (count / total) * 100;
+                const progressColor = getProgressColor(percentage);
+                
+                const card = document.createElement('div');
+                card.className = 'thana-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-icon">${thana.icon}</div>
+                        <div class="card-title">
+                            <div class="card-name-hi">${thana.nameHi}</div>
+                            <div class="card-name-en">${thana.nameEn} - ${thana.english}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-stats">
+                            <span class="progress-label">Characteristics</span>
+                            <span class="progress-value">${count}/${total}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background: ${progressColor}"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="status-indicators">
+                        <div class="status-badge present">
+                            <span>✓ ${count} Present</span>
+                        </div>
+                        <div class="status-badge absent">
+                            <span>✗ ${total - count} Absent</span>
+                        </div>
+                    </div>
+                    
+                    <button class="view-details-btn" onclick="showDetails(${thanaIndex})">
+                        View Full Details →
+                    </button>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+        
+        // Show detailed modal
+        function showDetails(thanaIndex) {
+            const thana = thanasData[thanaIndex];
+            const count = getThanaData(thanaIndex);
+            const total = thana.total;
+            const config = categoryConfigs[currentCategory];
+            const subItemValue = document.getElementById('sub-item').value;
+            
+            // Update modal header
+            document.getElementById('modal-title').textContent = thana.nameHi;
+            document.getElementById('modal-subtitle').textContent = `${thana.nameEn} - ${thana.english}`;
+            
+            let contextText = '';
+            if (currentCategory === 'gunasthan') {
+                contextText = `In ${config.getLabel(subItemValue)}`;
+            } else {
+                contextText = `In ${config.name}: ${config.items[subItemValue]}`;
+            }
+            document.getElementById('modal-context').textContent = contextText;
+            
+            // Update stats
+            document.getElementById('stat-present').textContent = count;
+            document.getElementById('stat-absent').textContent = total - count;
+            document.getElementById('stat-total').textContent = total;
+            
+            // Build body content
+            let bodyHtml = '';
+            
+            // For demo purposes, show simplified present/absent lists
+            const presentCount = count;
+            const absentCount = total - count;
+            
+            if (presentCount > 0) {
+                bodyHtml += `
+                    <div class="modal-section present">
+                        <h4 class="section-title present">
+                            <span class="section-icon present">✓</span>
+                            Present Characteristics (${presentCount})
+                        </h4>
+                        <div class="section-items">
+                            ${thana.subtypes.slice(0, presentCount).map(item => 
+                                `<span class="item-tag">${item}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (absentCount > 0) {
+                bodyHtml += `
+                    <div class="modal-section absent">
+                        <h4 class="section-title absent">
+                            <span class="section-icon absent">✗</span>
+                            Absent Characteristics (${absentCount})
+                        </h4>
+                        <div class="section-items">
+                            ${thana.subtypes.slice(presentCount).map(item => 
+                                `<span class="item-tag">${item}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Progress visualization
+            const percentage = (count / total * 100).toFixed(1);
+            bodyHtml += `
+                <div style="background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); 
+                           border-radius: 12px; padding: 20px; margin-top: 20px; text-align: center;">
+                    <div style="font-size: 36px; font-weight: 700; color: #1f2937; margin-bottom: 8px;">
+                        ${percentage}%
+                    </div>
+                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 12px;">
+                        ${count} out of ${total} characteristics present
+                    </div>
+                    <div class="progress-bar" style="height: 12px;">
+                        <div class="progress-fill" style="width: ${percentage}%; background: ${getProgressColor(parseFloat(percentage))}"></div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modal-body').innerHTML = bodyHtml;
+            
+            // Show modal
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+        
+        // Close modal
+        function closeModal(event) {
+            if (!event || event.target.id === 'modal-overlay' || event.type === 'click') {
+                document.getElementById('modal-overlay').classList.remove('active');
+            }
+        }
+        
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+</html>
