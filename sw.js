@@ -1,18 +1,14 @@
 // sw.js
 
-// A new cache name to ensure the browser updates
-const CACHE_NAME = 'gunasthan-pwa-v2.0'; 
-
-// The complete list of files needed for offline functionality
+const CACHE_NAME = 'gunasthan-pwa-v1.0';
 const urlsToCache = [
   './',
-  'index.html', // The original simple version
-  'index-enhanced.html', // The enhanced version
-  'gunasthan_game.html',
-  'app.js', // Crucial for the simple index.html
-  'manifest.json',
-  'icon-192.png',
-  'icon-512.png'
+  './index.html',
+  './gunasthan_game.html',
+  './app.js',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 // Install the service worker and cache all the app's assets
@@ -20,11 +16,11 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache and caching all necessary files');
+        console.log('Opened cache and caching files');
         return cache.addAll(urlsToCache);
       })
       .catch(err => {
-        console.error('Failed to cache files during install:', err);
+        console.error('Failed to cache files:', err);
       })
   );
   self.skipWaiting();
@@ -37,7 +33,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME) {
-            console.log('Service Worker: Deleting old cache:', cacheName);
+            console.log('Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
         })
@@ -47,16 +43,16 @@ self.addEventListener('activate', event => {
   return self.clients.claim();
 });
 
-// Fetch event: serve assets from cache first for a true offline experience
+// Fetch event: serve assets from cache first
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Cache hit - return the response from the cache
+        // Cache hit - return response from cache
         if (response) {
           return response;
         }
-        // Not in cache - fetch from the network
+        // Not in cache - fetch from network
         return fetch(event.request);
       }
     )
